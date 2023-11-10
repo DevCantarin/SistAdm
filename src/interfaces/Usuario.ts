@@ -1,0 +1,37 @@
+export interface Usuario {
+  nome: string;
+  email: string;
+  grad: string;
+  re: string;
+  dig: string;
+  funcao: string;
+  pai: string;
+  mae: string;
+  admissao: string;
+  nome_completo: String;
+  nascimento: String;
+  cidade: String;
+  estado: String;
+  conjuge: String;
+  dependentes: String;
+  sangue: String;
+  cor: String;
+  olhos: String;
+  cabelos: String;
+  bigodes: String;
+  cpf: String;
+  rg: String;
+  pasep: String;
+  pis: String;
+  carteira_trabalho: String;
+  cnh: String;
+  val: String;
+  cat: String;
+  sat: String;
+  residencia: String;
+  bairro: String;
+  cep: String;
+  telefone: String;
+  imagem: String;
+  senha: String;
+}
