@@ -54,9 +54,7 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
               especialidade={especialista.especialidade}
               foto={especialista.imagem}
               nome={especialista.nome}
-              onPress={() => navigation.navigate('Agendamento', {
-                especialistaId: especialista.id
-              })}
+              onPress={() => navigation.navigate('Agendamento')}
             />
           </VStack>
         ))}

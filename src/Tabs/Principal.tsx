@@ -5,7 +5,7 @@ import { Titulo } from '../componentes/Titulo'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { pegarConsultasPaciente } from '../servicos/UsuarioServico'
-import { cancelarConsulta } from '../servicos/ConsultaServico'
+import { cancelarConsulta } from '../servicos/FolgasServico'
 import { NavigationProps } from '../@types/navigation'
 import { useIsFocused } from '@react-navigation/native'
 import { converterDataParaString } from '../utils/conversoes'
@@ -68,7 +68,7 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
   return(
     <ScrollView p="5">
       <Titulo color="blue.500">Minhas Escalas</Titulo>
-      <Botao mt={5} mb={5}>Agendar nova Folga</Botao>
+      <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>Agendar nova Folga</Botao>
 
       <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>Próximas Escalas</Titulo>
       {EscalaProximas?.map((escala) => (
@@ -94,7 +94,6 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
           data={converterDataParaString(escala?.data)}
           foiAtendido
           key={escala.id}
-          onPress={() => navigation.navigate('Agendamento', { especialistaId: escala.especialista.id })}
         />
       )) }
     </ScrollView>

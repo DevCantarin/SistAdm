@@ -92,7 +92,7 @@ export default function Cadastro({ navigation }: NavigationProps<'Cadastro'>) {
 
   return (
     <ScrollView flex={1} p={5}>
-    <Image source={Logo} alt="Logo Voll" alignSelf="center" w="75" height="75" />
+    <Image source={Logo} alt="Logo PMES" alignSelf="center" w="75" height="75" />
 
       <Titulo>
         {secoes[numSecao].titulo}

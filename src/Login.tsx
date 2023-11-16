@@ -18,14 +18,31 @@ export default function Login({ navigation } : NavigationProps<'Login'>) {
 
   useEffect(() => {
     async function verificarLogin(){
-      const token = await AsyncStorage.getItem('token')
+      const token = await AsyncStorage.getItem('token');
       if(token){
-        navigation.replace('Tabs')
+        try {
+          const decodedToken:any = jwtDecode(token);
+          const exp = decodedToken.exp * 1000; 
+          const currentTime = Date.now();
+  
+          if (exp > currentTime) {
+ 
+            navigation.replace('Tabs');
+          } else {
+  
+            await AsyncStorage.removeItem('token');
+          }
+        } catch (error) {
+       
+          console.error('Erro ao decodificar o token:', error);
+          await AsyncStorage.removeItem('token');
+        }
       }
-      setCarregando(false)
+      setCarregando(false);
     }
-    verificarLogin()
-  },[])
+  
+    verificarLogin();
+  }, []);
 
   interface TokenProps {
     token: string;
