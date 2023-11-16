@@ -5,7 +5,6 @@ import { Titulo } from '../componentes/Titulo'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { pegarConsultasPaciente } from '../servicos/UsuarioServico'
-import { cancelarConsulta } from '../servicos/FolgasServico'
 import { NavigationProps } from '../@types/navigation'
 import { useIsFocused } from '@react-navigation/native'
 import { converterDataParaString } from '../utils/conversoes'
@@ -49,21 +48,21 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
     carregarConsultas()
   }, [isFocused, recarregar])
 
-  async function cancelar(consultaId: string) {
-    const resultado = await cancelarConsulta(consultaId);
-    if (resultado) {
-      toast.show({
-        title: 'Consulta cancelada com sucesso',
-        backgroundColor: 'green.500',
-      });
-      setRecarregar(!recarregar);
-    } else {
-      toast.show({
-        title: 'Erro ao cancelar consulta',
-        backgroundColor: 'red.500',
-      });
-    }
-  }
+  // async function cancelar(consultaId: string) {
+  //   const resultado = await cancelarConsulta(consultaId);
+  //   if (resultado) {
+  //     toast.show({
+  //       title: 'Consulta cancelada com sucesso',
+  //       backgroundColor: 'green.500',
+  //     });
+  //     setRecarregar(!recarregar);
+  //   } else {
+  //     toast.show({
+  //       title: 'Erro ao cancelar consulta',
+  //       backgroundColor: 'red.500',
+  //     });
+  //   }
+  // }
 
   return(
     <ScrollView p="5">
@@ -79,7 +78,7 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
           data={converterDataParaString(escala?.data)}
           foiAgendado
           key={escala.id}
-          onPress={() => cancelar(escala.id)}
+          // onPress={() => cancelar(escala.id)}
         />
       )) }
 

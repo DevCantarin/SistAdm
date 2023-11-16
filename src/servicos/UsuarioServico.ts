@@ -33,7 +33,7 @@ export async function pegarDadosUsuarios(id: string) {
       },
     });
 
-    console.log(resultado.data);
+    // console.log(resultado.data);
     return resultado.data;
   } catch (error) {
     console.log(error);

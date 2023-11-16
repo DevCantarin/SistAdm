@@ -18,24 +18,23 @@ export default function Agendamento({ route, navigation }: any) {
   const [qra, setQra] =  useState('');
   const [motivo, setMotivo] = useState('');
   const [Quantidade, setQuantidade] = useState('')
-  const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario)
+  const [motivoTratado, setMotivoTratado] = useState('')
 
   const motivoOpcoes = ["JUNÇÃO DE MEIOS", "DISPENSA DO SERVIÇO", "FOLGA MENSAL", "LUTO", "PATERNIDADE", "NUPCIAS", "OUTROS"];
   const [motivoSelecionado, setMotivoSelecionado] = useState('');
 
+ 
 
   useEffect(() => {
     async function dadosUsuarios() {
       const mikeId = await AsyncStorage.getItem('mikeId');
       if (!mikeId) return null;
   
-      const resultado = await pegarDadosUsuarios(mikeId);
-      if (resultado) {
-        setDadosUsuarios(resultado);
-        setGrad(resultado.grad);  // Mova para dentro do useEffect
-        setRe(resultado.re);      // Mova para dentro do useEffect
-        setQra(resultado.nome);   // Mova para dentro do useEffect
-        console.log(resultado);
+      const resultadoMike = await pegarDadosUsuarios(mikeId);
+      if (resultadoMike) {
+        setGrad(resultadoMike.grad);  
+        setRe(`${resultadoMike.re}-${resultadoMike.dig}`);      
+        setQra(resultadoMike.nome);   
       }
     }
   
@@ -58,40 +57,43 @@ export default function Agendamento({ route, navigation }: any) {
     setShow(true);
   };
 
-  
+  useEffect(() => {
+    setMotivoTratado(motivoSelecionado === "OUTROS" ? motivo : motivoSelecionado);
+  }, [motivo, motivoSelecionado]);
+
   async function agendar() {
-    // const pacienteId = await AsyncStorage.getItem('pacienteId');
-    // const { especialistaId } = route.params;
 
-    // if (!pacienteId || !especialistaId || !data) {
-    //   toast.show({
-    //     title: 'Erro ao agendar consulta',
-    //     description: 'Preencha todos os campos',
-    //     backgroundColor: 'red.500',
-    //   });
-    //   return;
-    // }
-
-    const dataFormatada = date;
-
-    const resultado = await agendarFolgas(dataFormatada, grad, re, qra, motivo, Quantidade);
-
-    if (resultado) {
+    if (!date || !grad || !re || !qra || !motivoTratado || !Quantidade) {
+      console.log(`data:${date} grad:${grad} re:${re} qra:${qra} motivoTratado:${motivoTratado} Quantidade:${Quantidade} motivo:${motivo} motivoselecionado: ${motivoSelecionado}`)
       toast.show({
-        title: 'Folga agendada com sucesso',
-        backgroundColor: 'green.500',
-      });
-      // navigation.goBack();
-    } else {
-      toast.show({
-        title: 'Erro ao agendar Folga',
-        description: 'Horário indisponível',
+        title: 'Erro ao agendar consulta',
+        description: 'Preencha todos os campos',
         backgroundColor: 'red.500',
       });
+      return;
     }
-    console.log(motivoSelecionado, dataFormatada)
-
+  
+    try {
+      const resultado = await agendarFolgas(date, grad, re, qra, motivoTratado, Quantidade);
+  
+      if (resultado) {
+        toast.show({
+          title: 'Folga agendada com sucesso',
+          backgroundColor: 'green.500',
+        });
+        navigation.goBack();
+      } else {
+        toast.show({
+          title: 'Erro ao agendar Folga',
+          description: 'Horário indisponível',
+          backgroundColor: 'red.500',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
+  
 
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: 'center', padding: 10 }}>
