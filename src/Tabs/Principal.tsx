@@ -4,10 +4,11 @@ import { CardEscala } from '../componentes/CardEscala'
 import { Titulo } from '../componentes/Titulo'
 import { useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { pegarConsultasPaciente } from '../servicos/UsuarioServico'
+import { pegarDadosUsuarios,pegarFolgasUsuario } from '../servicos/UsuarioServico'
 import { NavigationProps } from '../@types/navigation'
 import { useIsFocused } from '@react-navigation/native'
 import { converterDataParaString } from '../utils/conversoes'
+import { Usuario } from '../interfaces/Usuario'
 
 interface Especialista {
   especialidade: string;
@@ -17,7 +18,7 @@ interface Especialista {
 }
 
 interface Escala {
-  data: string;
+  data_inicial: string;
   especialista: Especialista;
   id: string;
   name: String;
@@ -25,28 +26,40 @@ interface Escala {
 }
 
 export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
-  const [EscalaProximas, setEscalasProximas] = useState<Escala[]>([])
-  const [EscalaPassadas, setEscalasPassadas]= useState<Escala[]>([])
-  const [recarregar, setRecarregar] = useState(false);
+  const [mikeId, setMikeId] = useState("");
+  const [folgasAgendadas, setFolgasAgendadas]= useState<Escala[]>([])
+  const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
   const toast = useToast();
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    async function carregarConsultas(){
-      const pacienteId = await AsyncStorage.getItem('pacienteId')
-      if(!pacienteId) return null
-      const escalas: Escala[] = await pegarConsultasPaciente(pacienteId)
+    async function fetchData() {
+      const storedMikeId = await AsyncStorage.getItem('mikeId');
+      if (!storedMikeId) return null;
 
-      const agora = new Date();
-      const proximas = escalas.filter((escala) => new Date(escala.data) > agora)
+      setMikeId(storedMikeId);
 
-      const passadas = escalas.filter((escala) => new Date(escala.data) <= agora)
-
-      setEscalasProximas(proximas)
-      setEscalasPassadas(passadas)
+      const resultado = await pegarDadosUsuarios(storedMikeId);
+      if (resultado) {
+        setDadosUsuarios(resultado);
+  
+      }
     }
-    carregarConsultas()
-  }, [isFocused, recarregar])
+    fetchData();
+  }, []);
+  useEffect(() => {
+    async function folgaData() {
+
+      const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
+      console.log(`dadosUsuarios é ${dadosUsuarios.re}-${dadosUsuarios.dig}`)
+      console.log(`o resultado é ${JSON.stringify(resultado)}`)
+      if (resultado) {
+        setFolgasAgendadas(resultado);
+  
+      }
+    }
+    folgaData();
+  }, []);
 
   // async function cancelar(consultaId: string) {
   //   const resultado = await cancelarConsulta(consultaId);
@@ -70,31 +83,27 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
       <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>Agendar nova Folga</Botao>
 
       <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>Próximas Escalas</Titulo>
-      {EscalaProximas?.map((escala) => (
+
         <CardEscala 
-          nome={escala?.especialista?.nome}
-          especialidade={escala?.especialista?.especialidade}
-          foto={escala?.especialista?.imagem}
-          data={converterDataParaString(escala?.data)}
-          foiAgendado
-          key={escala.id}
+          nome= "Aux Escalante"
+          data="01/01/2024 das 07:00 às 18:00"
           // onPress={() => cancelar(escala.id)}
         />
-      )) }
+
 
       <Divider mt={5} />
 
-      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>Escalas Passadas</Titulo>
-      {EscalaPassadas?.map((escala) => (
+      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>Folgas Agendadas</Titulo>
+      {folgasAgendadas?.map((folga) => (
         <CardEscala 
-          nome={escala?.especialista?.nome}
-          especialidade={escala?.especialista?.especialidade}
-          foto={escala?.especialista?.imagem}
-          data={converterDataParaString(escala?.data)}
+          nome={dadosUsuarios?.nome}
+          data={converterDataParaString(folga.data_inicial)}
           foiAtendido
-          key={escala.id}
+          key={folga.id}
         />
       )) }
+
+       
     </ScrollView>
   )
 }

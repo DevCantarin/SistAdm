@@ -33,9 +33,9 @@ export async function agendarFolgas(data: Date, gradId:string, reId: string, nom
   }
 }
 
-export async function cancelarFolgas(consultaId: string){
+export async function cancelarFolgas(folgaId: string){
   try {
-    const resultado = await api.delete(`/folgas/${consultaId}`)
+    const resultado = await api.delete(`/folgas/${folgaId}`)
     console.log(resultado.data)
     return resultado.data
   }
@@ -43,4 +43,6 @@ export async function cancelarFolgas(consultaId: string){
     console.log(error)
     return null
   }
+
+  
 }

@@ -58,10 +58,18 @@ export default function Agendamento({ route, navigation }: any) {
   };
 
   useEffect(() => {
-    setMotivoTratado(motivoSelecionado === "OUTROS" ? motivo : motivoSelecionado);
-  }, [motivo, motivoSelecionado]);
+  setMotivoTratado(motivoSelecionado === "OUTROS" ? motivo : motivoSelecionado);
+}, [motivo, motivoSelecionado]);
 
   async function agendar() {
+    if (isNaN(parseFloat(Quantidade))) {
+      toast.show({
+        title: 'Erro ao agendar consulta',
+        description: 'A quantidade deve ser um número válido',
+        backgroundColor: 'red.500',
+      });
+      return;
+    }
 
     if (!date || !grad || !re || !qra || !motivoTratado || !Quantidade) {
       console.log(`data:${date} grad:${grad} re:${re} qra:${qra} motivoTratado:${motivoTratado} Quantidade:${Quantidade} motivo:${motivo} motivoselecionado: ${motivoSelecionado}`)
