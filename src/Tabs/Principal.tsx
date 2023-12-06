@@ -1,4 +1,5 @@
-import { VStack, Divider, ScrollView, useToast } from 'native-base'
+import React from 'react'
+import { Divider, ScrollView, useToast } from 'native-base'
 import { Botao } from '../componentes/Botao'
 import { CardEscala } from '../componentes/CardEscala'
 import { Titulo } from '../componentes/Titulo'
@@ -9,6 +10,8 @@ import { NavigationProps } from '../@types/navigation'
 import { useIsFocused } from '@react-navigation/native'
 import { converterDataParaString } from '../utils/conversoes'
 import { Usuario } from '../interfaces/Usuario'
+import { useFocusEffect } from '@react-navigation/native';
+
 
 interface Especialista {
   especialidade: string;
@@ -47,19 +50,19 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
     }
     fetchData();
   }, []);
-  useEffect(() => {
-    async function folgaData() {
-
-      const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
-      console.log(`dadosUsuarios é ${dadosUsuarios.re}-${dadosUsuarios.dig}`)
-      console.log(`o resultado é ${JSON.stringify(resultado)}`)
-      if (resultado) {
-        setFolgasAgendadas(resultado);
-  
+  useFocusEffect(
+    React.useCallback(() => {
+      async function folgaData() {
+        const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
+        console.log(`dadosUsuarios é ${dadosUsuarios.re}-${dadosUsuarios.dig}`)
+        console.log(`o resultado é ${JSON.stringify(resultado)}`)
+        if (resultado) {
+          setFolgasAgendadas(resultado);
+        }
       }
-    }
-    folgaData();
-  }, []);
+      folgaData();
+    }, [dadosUsuarios.re, dadosUsuarios.dig])
+  );
 
   // async function cancelar(consultaId: string) {
   //   const resultado = await cancelarConsulta(consultaId);

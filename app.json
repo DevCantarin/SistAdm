@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SistAdm-mobile-integracao-api",
-    "slug": "SistAdm-mobile-integracao-api",
+    "name": "SistAdm-mobile",
+    "slug": "SistAdm",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,20 +15,22 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.devcantarin.SistAdm"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.devcantarin.SistAdm"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "d3012ccc-b2b9-4551-990a-8954687d6435"
+        "projectId": "7fad6ceb-9a1f-4ae7-94bd-6bdf107ae7f6"
       }
     }
   }

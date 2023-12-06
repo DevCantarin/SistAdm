@@ -1,6 +1,6 @@
 import { VStack, Image, Text, Box, Link, useToast } from 'native-base'
 import { TouchableOpacity } from 'react-native';
-import Logo from './assets/Logo.png'
+// import Logo from './assets/Logo.png'
 import { Botao } from './componentes/Botao';
 import { EntradaTexto } from './componentes/EntradaTexto';
 import { Titulo } from './componentes/Titulo';
@@ -75,7 +75,7 @@ export default function Login({ navigation } : NavigationProps<'Login'>) {
 
   return (
     <VStack flex={1} alignItems="center" justifyContent="center" p={5}>
-      <Image source={Logo} alt="Logo Voll" alignSelf="center" w="100" height="100"  mb="50px"/>
+      {/* <Image source={Logo} alt="Logo Voll" alignSelf="center" w="100" height="100"  mb="50px"/> */}
 
       <Titulo>
         Faça login em sua conta
