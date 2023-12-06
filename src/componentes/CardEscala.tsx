@@ -26,8 +26,8 @@ export function CardEscala({
         </VStack>
       </VStack>
       {/* <Botao mt={4} onPress={onPress}>
-        {foiAgendado ? 'Cancelar' : 'Agendar consulta'} */}
-      {/* </Botao> */}
+        {foiAgendado ? 'Cancelar' : ''}
+      </Botao> */}
     </VStack>
   )
 }

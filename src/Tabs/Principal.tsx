@@ -99,6 +99,7 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
           nome={dadosUsuarios?.nome}
           data={converterDataParaString(folga.data_inicial)}
           foiAtendido
+          foiAgendado
           key={folga.id}
         />
       )) }
