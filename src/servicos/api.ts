@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://192.168.15.26:8000"
+  baseURL: "https://backend-main-production-13d6.up.railway.app"
 })
 
 export default api;

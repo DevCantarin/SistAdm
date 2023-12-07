@@ -38,6 +38,8 @@ export default function Escalas({ navigation }: NavigationProps<'Escalas'>){
   useEffect(() => {
     async function fetchData() {
       const storedMikeId = await AsyncStorage.getItem('mikeId');
+
+      console.log(`storedMikeId ${storedMikeId}`)
       if (!storedMikeId) return null;
 
       setMikeId(storedMikeId);

@@ -41,8 +41,9 @@ export default function Perfil({ navigation }: NavigationProps<'Perfil'>) {
   
     if (!result.canceled) {
       const imagemTrocada = result.assets[0].uri;
+      console.log(`Mike ID eh ${mikeId}`);
   
-      if (dadosUsuarios && dadosUsuarios.imagem) {
+      if (dadosUsuarios) {
         console.log(`A imagem selecionada foi ${imagemTrocada}`);
         editarFotoUsuario(mikeId, imagemTrocada); 
         setImage(imagemTrocada)

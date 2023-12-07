@@ -17,7 +17,7 @@ export interface Usuario {
   sangue: String;
   cor: String;
   olhos: String;
-  cabelos: String;
+  cabelo: String;
   bigodes: String;
   cpf: String;
   rg: String;

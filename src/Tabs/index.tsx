@@ -27,11 +27,11 @@ const tabs = [
     component: Escalas,
     icon: 'calendar'
   },
-  {
-    name: 'Explorar',
-    component: Explorar,
-    icon: 'search'
-  },
+  // {
+  //   name: 'Explorar',
+  //   component: Explorar,
+  //   icon: 'search'
+  // },
   {
     name: 'Perfil',
     component: Perfil,

@@ -1,6 +1,6 @@
 import { Image, Text, Box, Checkbox, ScrollView, useToast } from 'native-base'
 import { useState } from 'react';
-import Logo from './assets/Logo.png'
+// import Logo from './assets/Logo.png'
 import { Botao } from './componentes/Botao';
 import { EntradaTexto } from './componentes/EntradaTexto';
 import { Titulo } from './componentes/Titulo';
@@ -45,7 +45,7 @@ export default function Cadastro({ navigation }: NavigationProps<'Cadastro'>) {
       admissao: dados.admissao,
       bairro: dados.bairro,
       bigodes: dados.bigodes,
-      cabelos: dados.cabelos,
+      cabelo: dados.cabelo,
       carteira_trabalho: dados.carteira_trabalho,
       cat: dados.cat,
       cep: dados.cep,
@@ -92,7 +92,7 @@ export default function Cadastro({ navigation }: NavigationProps<'Cadastro'>) {
 
   return (
     <ScrollView flex={1} p={5}>
-    <Image source={Logo} alt="Logo PMES" alignSelf="center" w="75" height="75" />
+    {/* <Image source={Logo} alt="Logo PMES" alignSelf="center" w="75" height="75" /> */}
 
       <Titulo>
         {secoes[numSecao].titulo}
