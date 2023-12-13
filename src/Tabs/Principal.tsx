@@ -13,16 +13,9 @@ import { Usuario } from '../interfaces/Usuario'
 import { useFocusEffect } from '@react-navigation/native';
 
 
-interface Especialista {
-  especialidade: string;
-  id: string;
-  nome: string;
-  imagem: string;
-}
 
 interface Escala {
   data_inicial: string;
-  especialista: Especialista;
   id: string;
   name: String;
   component: String;

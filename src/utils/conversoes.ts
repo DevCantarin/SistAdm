@@ -12,9 +12,6 @@ export function converterStringParaData(dateString: string) {
 
 export function converterDataParaString(data: string): string {
   const dataFormatada = new Date(data).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
-  const [date, time] = dataFormatada.split(" ")
-  const [day, month, year] = date.split("/")
-  const [hour, minute] = time.split(":")
-  const dataConvertida = `${day}/${month}/${year} ${hour}:${minute}`
-  return dataConvertida
+  const [date] = dataFormatada.split(" ")
+  return date;
 }

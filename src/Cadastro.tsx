@@ -15,11 +15,18 @@ export default function Cadastro({ navigation }: NavigationProps<'Cadastro'>) {
 
   function avancarSecao(){
     if(numSecao < secoes.length - 1){
+      if(dados.senha != dados.confirmaSenha){
+        toast.show({
+          title: 'Senha não Bate',
+          description: 'Stive, a Confirmação de senha deve ser igual a senha',
+          backgroundColor: 'red.500',
+        })
+        return
+      }
       setNumSecao(numSecao+1)
     }
     else{
       console.log(dados)
-      console.log(`a senha é:${dados.senha}`)
       cadastrar()
     }
   }
@@ -33,6 +40,54 @@ export default function Cadastro({ navigation }: NavigationProps<'Cadastro'>) {
   function atualizarDados(id: string, valor: string){
     setDados({...dados, [id]: valor})
   }
+
+  function formatarData(valor: string) {
+    // Remove caracteres não numéricos
+    const cleanedValue = valor.replace(/\D/g, '');
+  
+    // Adiciona barras conforme o formato DD/MM/YYYY
+    const day = cleanedValue.substring(0, 2);
+    const month = cleanedValue.substring(2, 4);
+    const year = cleanedValue.substring(4, 8);
+  
+    const formattedValue = day + (month ? `/${month}` : '') + (year ? `/${year}` : '');
+  
+    return formattedValue;
+  }
+  function formatarCPF(valor:string) {
+    const cleanedValue = valor.replace(/\D/g, '');
+    const part1 = cleanedValue.substring(0, 3);
+    const part2 = cleanedValue.substring(3, 6);
+    const part3 = cleanedValue.substring(6, 9);
+    const part4 = cleanedValue.substring(9, 11);
+  
+    const formattedValue = `${part1}.${part2}.${part3}-${part4}`;
+  
+    return formattedValue;
+  }
+  function formatarCEP(valor: string) {
+    const cleanedValue = valor.replace(/\D/g, '');
+  
+    const part1 = cleanedValue.substring(0, 5);
+    const part2 = cleanedValue.substring(5, 8);
+  
+    const formattedValue = `${part1}-${part2}`;
+  
+    return formattedValue;
+  }
+  function formatarTelefone(valor: string) {
+    const cleanedValue = valor.replace(/\D/g, '');
+
+    const part1 = cleanedValue.substring(0, 2); // Código de área
+    const part2 = cleanedValue.substring(2, 6); // Primeira parte do número
+    const part3 = cleanedValue.substring(6, 10); // Segunda parte do número
+
+    const formattedValue = `(${part1}) ${part2}-${part3}`;
+
+    return formattedValue;
+  }
+  
+  
 
   async function cadastrar(){
     const resultado = await cadastrarUsuario({
@@ -101,43 +156,32 @@ export default function Cadastro({ navigation }: NavigationProps<'Cadastro'>) {
         {
           secoes[numSecao]?.entradaTexto?.map(entrada => {
             return (
-              <EntradaTexto 
-                label={entrada.label} 
-                placeholder={entrada.placeholder} 
-                key={entrada.id} 
-                secureTextEntry={entrada.secureTextEntry}
-                value={dados[entrada.name]}
-                onChangeText={(text) => atualizarDados(entrada.name, text)}
-              />
+              <EntradaTexto
+              label={entrada.label}
+              placeholder={entrada.placeholder}
+              key={entrada.id}
+              secureTextEntry={entrada.secureTextEntry}
+              value={dados[entrada.name]}
+              onChangeText={(text) => {
+                const valorFormatado =
+                  entrada.name === 'cep'
+                    ? formatarCEP(text)
+                    : entrada.name === 'nascimento' || entrada.name === 'admissao' || entrada.name === 'val'
+                    ? formatarData(text)
+                    : entrada.name === 'cpf'
+                    ? formatarCPF(text)
+                    : entrada.name === 'telefone'
+                    ? formatarTelefone(text)
+                    : text;
+
+                atualizarDados(entrada.name, valorFormatado);
+              }}
+            />
+
             )
           })
         }
       </Box>
-      {/* <Box>
-        {numSecao == 2 && <Text color="blue.800" fontWeight="bold" fontSize="md" mt="2" mb={2}>
-          Selecione o plano:
-        </Text>}
-        {
-          secoes[numSecao].checkbox.map(checkbox => {
-            return (
-              <Checkbox 
-                key={checkbox.id} 
-                value={checkbox.value}
-                onChange={() => {
-                  setPlanos((planosAnteriores) => {
-                    if(planosAnteriores.includes(checkbox.id)){
-                      return planosAnteriores.filter((id) => id !== checkbox.id)
-                    }
-                    return [...planosAnteriores, checkbox.id]
-                  })
-                }}
-                isChecked={planos.includes(checkbox.id)}
-              >
-              {checkbox.value}
-            </Checkbox>)
-          })
-        }
-      </Box> */}
       {numSecao > 0 && <Botao onPress={() => voltarSecao()} bgColor="gray.400">Voltar</Botao>}
       <Botao onPress={() => avancarSecao()} mt={4} mb={20}>
         {numSecao < secoes.length - 1?  'Avancar':  'Finalizar'}

@@ -29,18 +29,6 @@ const secoes = [
         secureTextEntry: true,
         name: 'confirmaSenha'
       },
-      // {
-      //   id: 5,
-      //   label: 'CPF',
-      //   placeholder: 'Insira seu CPF',
-      //   name: 'cpf'
-      // },
-      // {
-      //   id: 6,
-      //   label: 'Foto de perfil',
-      //   placeholder: 'Link da foto',
-      //   name: 'imagem'
-      // }
     ],
     checkbox: []
   },
@@ -237,41 +225,6 @@ const secoes = [
     ],
     checkbox: []
   },
-  // {
-  //   id: 3,
-  //   titulo: 'Para finalizar, quais são os seus planos?',
-  //   entradaTexto: [],
-  //   checkbox: [
-  //     {
-  //       id: 1,
-  //       value: 'Sulamerica'
-  //     },
-  //     {
-  //       id: 2,
-  //       value: 'Unimed'
-  //     },
-  //     {
-  //       id: 3,
-  //       value: 'Bradesco'
-  //     },
-  //     {
-  //       id: 4,
-  //       value: 'Amil'
-  //     },
-  //     {
-  //       id: 5,
-  //       value: 'Biosaúde'
-  //     },
-  //     {
-  //       id: 6,
-  //       value: 'Biovida'
-  //     },
-  //     {
-  //       id: 7,
-  //       value: 'Outros'
-  //     }
-  //   ]
-  // }
 ]
 
 export { secoes }
