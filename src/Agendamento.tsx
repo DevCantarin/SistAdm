@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { ScrollView, Box, Button, useToast,Text, Select } from 'native-base';
+import { ScrollView, Box, Button, useToast,Text, Select, } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Botao } from './componentes/Botao';
 import { agendarFolgas } from './servicos/FolgasServico';
@@ -7,10 +7,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { converterStringParaData } from './utils/conversoes';
 import { Titulo } from './componentes/Titulo';
 import { EntradaTexto } from './componentes/EntradaTexto';
-import { pegarDadosUsuarios } from './servicos/UsuarioServico';
+import { pegarDadosUsuarios,pegarFolgasUsuario } from './servicos/UsuarioServico';
+import { useFocusEffect } from '@react-navigation/native';
 import { Usuario } from './interfaces/Usuario';
+import { Folga } from './interfaces/Folga';
+
+
 
 export default function Agendamento({ route, navigation }: any) {
+  const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [grad, setGrad] =  useState('');
@@ -19,6 +24,8 @@ export default function Agendamento({ route, navigation }: any) {
   const [motivo, setMotivo] = useState('');
   const [Quantidade, setQuantidade] = useState('')
   const [motivoTratado, setMotivoTratado] = useState('')
+  const [folgasAgendadas, setFolgasAgendadas]= useState<Folga[]>([])
+  const [folgasAgendadasDoMes, setfolgasAgendadasDoMes] = useState<Folga[]>([])
 
   const motivoOpcoes = ["JUNÇÃO DE MEIOS", "DISPENSA DO SERVIÇO", "FOLGA MENSAL", "LUTO", "PATERNIDADE", "NUPCIAS", "OUTROS"];
   const [motivoSelecionado, setMotivoSelecionado] = useState('');
@@ -32,6 +39,7 @@ export default function Agendamento({ route, navigation }: any) {
   
       const resultadoMike = await pegarDadosUsuarios(mikeId);
       if (resultadoMike) {
+        setDadosUsuarios(resultadoMike)
         setGrad(resultadoMike.grad);  
         setRe(`${resultadoMike.re}-${resultadoMike.dig}`);      
         setQra(resultadoMike.nome);   
@@ -40,7 +48,20 @@ export default function Agendamento({ route, navigation }: any) {
   
     dadosUsuarios();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      async function folgaData() {
+        const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
+        if (resultado) {
+          setFolgasAgendadas(resultado);
+        }
+      }
+      folgaData();
+    }, [dadosUsuarios.re, dadosUsuarios.dig])
+  );
   
+  console.log(folgasAgendadas)
 
   const toast = useToast();
 
@@ -50,6 +71,14 @@ export default function Agendamento({ route, navigation }: any) {
       const localDate = new Date(selectedDate.getTime() + selectedDate.getTimezoneOffset() * 60000);
       setDate(localDate);
       console.log(localDate);
+      const folgasDoMes = folgasAgendadas.filter((folga) => {
+        // Converte a data inicial da folga para um objeto Date
+        const dataFolga = new Date(folga.data_inicial);
+        // Verifica se o mês da folga é o mesmo do mês da data escolhida
+        return dataFolga.getMonth() === date.getMonth();
+      });
+      setfolgasAgendadasDoMes(folgasDoMes)
+      console.log(folgasAgendadasDoMes);
     }
   };
 
@@ -70,6 +99,31 @@ export default function Agendamento({ route, navigation }: any) {
       });
       return;
     }
+
+    if (date <= new Date() ) {
+      toast.show({
+        title: 'Quem vive de passado é museu!!!!',
+        description: 'Stive, Marque sua Folga para uma data no futuro!!',
+        backgroundColor: 'red.500',
+      });
+      return;
+    }
+
+      // Filtra as folgas mensais do mesmo mês
+    const folgasMensaisNoMes = folgasAgendadasDoMes.filter((folga) => folga.motivo === 'FOLGA MENSAL');
+
+    console.log(` folgas mensais do mes ${folgasMensaisNoMes}`)
+
+    // Verifica se já existe uma folga mensal no mesmo mês
+    if (folgasMensaisNoMes.length >= 0) {
+      toast.show({
+        title: 'Duplicidade',
+        description: 'Você só pode agendar uma folga mensal por mês',
+        backgroundColor: 'red.500',
+      });
+      return;
+    }
+
 
     if (!date || !grad || !re || !qra || !motivoTratado || !Quantidade) {
       console.log(`data:${date} grad:${grad} re:${re} qra:${qra} motivoTratado:${motivoTratado} Quantidade:${Quantidade} motivo:${motivo} motivoselecionado: ${motivoSelecionado}`)
