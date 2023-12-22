@@ -1,29 +1,27 @@
-import React from 'react'
-import { Divider, ScrollView, useToast } from 'native-base'
-import { Botao } from '../componentes/Botao'
-import { CardEscala } from '../componentes/CardEscala'
-import { Titulo } from '../componentes/Titulo'
-import { useEffect, useState } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { pegarDadosUsuarios,pegarFolgasUsuario } from '../servicos/UsuarioServico'
-import { NavigationProps } from '../@types/navigation'
-import { useIsFocused } from '@react-navigation/native'
-import { converterDataParaString } from '../utils/conversoes'
-import { Usuario } from '../interfaces/Usuario'
-import { Escala } from '../interfaces/Escala'
-import { Folga } from '../interfaces/Folga'
+import React, { useEffect, useState } from 'react';
+import { Divider, ScrollView, useToast } from 'native-base';
+import { Botao } from '../componentes/Botao';
+import { CardEscala } from '../componentes/CardEscala';
+import { Titulo } from '../componentes/Titulo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { pegarDadosUsuarios, pegarFolgasUsuario } from '../servicos/UsuarioServico';
+import { NavigationProps } from '../@types/navigation';
+import { useIsFocused } from '@react-navigation/native';
+import { converterDataParaString } from '../utils/conversoes';
+import { Usuario } from '../interfaces/Usuario';
+import { Escala } from '../interfaces/Escala';
+import { Folga } from '../interfaces/Folga';
 import { useFocusEffect } from '@react-navigation/native';
-import { pegarEscalasUsuario } from '../servicos/escalaServico'
+import { pegarEscalasUsuario } from '../servicos/escalaServico';
 import { format } from 'date-fns';
+import { cancelarFolgas } from '../servicos/FolgasServico';
 
-
-
-
-export default function Pincipal({ navigation }: NavigationProps<'Principal'>){
-  const [mikeId, setMikeId] = useState("");
-  const [folgasAgendadas, setFolgasAgendadas]= useState<Folga[]>([])
+export default function Principal({ navigation }: NavigationProps<'Principal'>) {
+  const [mikeId, setMikeId] = useState('');
+  const [folgasAgendadas, setFolgasAgendadas] = useState<Folga[]>([]);
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
-  const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([])
+  const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([]);
+  const [forceUpdate, setForceUpdate] = useState(0); // Variável de controle
   const toast = useToast();
   const isFocused = useIsFocused();
 
@@ -31,7 +29,7 @@ export default function Pincipal({ navigation }: NavigationProps<'Principal'>){
     async function fetchData() {
       const storedMikeId = await AsyncStorage.getItem('mikeId');
 
-      console.log(`storedMikeId ${storedMikeId}`)
+      console.log(`storedMikeId ${storedMikeId}`);
       if (!storedMikeId) return null;
 
       setMikeId(storedMikeId);
@@ -39,11 +37,11 @@ export default function Pincipal({ navigation }: NavigationProps<'Principal'>){
       const resultado = await pegarDadosUsuarios(storedMikeId);
       if (resultado) {
         setDadosUsuarios(resultado);
-  
       }
     }
     fetchData();
-  }, []);
+  }, [isFocused, forceUpdate]); // Adicionei 'forceUpdate' como dependência para re-executar ao forçar a atualização
+
   useFocusEffect(
     React.useCallback(() => {
       async function folgaData() {
@@ -53,104 +51,96 @@ export default function Pincipal({ navigation }: NavigationProps<'Principal'>){
         }
       }
       folgaData();
-    }, [dadosUsuarios.re, dadosUsuarios.dig])
+    }, [dadosUsuarios.re, dadosUsuarios.dig, forceUpdate])
   );
 
   useFocusEffect(
     React.useCallback(() => {
       async function escalaData() {
         const resultado = await pegarEscalasUsuario(`${dadosUsuarios.re}`);
-        console.log(`o re é ${dadosUsuarios.re}`)
-        console.log(`o resultado de escalas é ${JSON.stringify(resultado)}`)
         if (resultado) {
           setDadosEscalas(resultado);
         }
       }
       escalaData();
-    }, [dadosUsuarios.re, dadosUsuarios.dig])
+    }, [dadosUsuarios.re, dadosUsuarios.dig, forceUpdate])
   );
 
+  const handleCancelarFolga = async (folga: Folga) => {
+    try {
+      const resultado = await cancelarFolgas(folga.id);
+  
+      if (resultado) {
+        console.log('Folga cancelada com sucesso');
+  
+        // Log antes da atualização
+        console.log('folgasAgendadas antes da atualização:', folgasAgendadas);
+  
+        setFolgasAgendadas((prevFolgas) => prevFolgas.filter((f) => f.id !== folga.id));
+  
+        // Log depois da atualização
+        console.log('folgasAgendadas após da atualização:', folgasAgendadas);
+  
+        setForceUpdate((prev) => prev + 1); // Incrementa 'forceUpdate' para forçar a atualização
+      } else {
+        console.log('Erro ao cancelar folga!!!');
+      }
+    } catch (error) {
+      console.error('Erro ao cancelar folga:', error);
+    }
+  };
+   
 
-  // async function cancelar(consultaId: string) {
-  //   const resultado = await cancelarConsulta(consultaId);
-  //   if (resultado) {
-  //     toast.show({
-  //       title: 'Consulta cancelada com sucesso',
-  //       backgroundColor: 'green.500',
-  //     });
-  //     setRecarregar(!recarregar);
-  //   } else {
-  //     toast.show({
-  //       title: 'Erro ao cancelar consulta',
-  //       backgroundColor: 'red.500',
-  //     });
-  //   }
-  // }
-
-  return(
+  return (
     <ScrollView p="5">
       <Titulo color="blue.500">Minhas Escalas</Titulo>
-      <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>Agendar nova Folga</Botao>
+      <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>
+        Agendar nova Folga
+      </Botao>
 
-      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>Previsão de Próximas Escalas</Titulo>
+      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
+        Previsão de Próximas Escalas
+      </Titulo>
 
-      {dadosEscalas.length > 0 && (
+      {dadosEscalas.length > 0 &&
         dadosEscalas.map((escala) => {
           const dataEscala = new Date(escala.data);
 
-          // Verifica se a data da escala é maior que a data atual
           if (dataEscala > new Date()) {
             return (
-              <CardEscala
-                key={escala.id}
-                nome={`${escala.nome} ${escala.funcao}`}
-                data={format(dataEscala, 'dd/MM/yyyy')}
-              />
+              <CardEscala key={escala.id} nome={`${escala.nome} ${escala.funcao}`} 
+               data={`${format(dataEscala, 'dd/MM/yyyy')}   ${escala.inicio} - ${escala.termino}`} />
             );
           }
 
-          // Se a data da escala for igual ou menor que hoje, retorna null (não renderiza o card)
           return null;
-        })
-      )}
-
+        })}
 
       <Divider mt={5} />
 
-      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>Folgas Agendadas</Titulo>
-      {folgasAgendadas.length > 0 && (
+      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
+        Folgas Agendadas
+      </Titulo>
+      {folgasAgendadas.length > 0 &&
         folgasAgendadas.map((folga) => {
           const dataFolga = new Date(folga.data_inicial);
 
-          // Verifica se a data da escala é maior que a data atual
-          if (dataFolga > new Date()) {
+          if (dataFolga.getDate()-1 > new Date().getDate()-1) {
             return (
-              <CardEscala 
+              <CardEscala
+                key={folga.id}
                 nome={`${dadosUsuarios?.nome}  ${folga.motivo}`}
                 data={converterDataParaString(folga.data_inicial)}
                 foiAtendido
                 foiAgendado
-                key={folga.id}
+                onPress={() => handleCancelarFolga(folga)}
+                folga={folga}
               />
             );
           }
 
-          // Se a data da escala for igual ou menor que hoje, retorna null (não renderiza o card)
           return null;
-        })
-      )}
-
-      {/* {folgasAgendadas?.map((folga) => (
-        <CardEscala 
-          nome={`${dadosUsuarios?.nome}  ${folga.motivo}`}
-          data={converterDataParaString(folga.data_inicial)}
-          foiAtendido
-          foiAgendado
-          key={folga.id}
-        />
-      )) } */}
-
-       
+        })}
     </ScrollView>
-  )
+);
 }

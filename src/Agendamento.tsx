@@ -60,8 +60,6 @@ export default function Agendamento({ route, navigation }: any) {
       folgaData();
     }, [dadosUsuarios.re, dadosUsuarios.dig])
   );
-  
-  console.log(folgasAgendadas)
 
   const toast = useToast();
 
@@ -70,7 +68,6 @@ export default function Agendamento({ route, navigation }: any) {
     if (selectedDate !== null) {  
       const localDate = new Date(selectedDate.getTime() + selectedDate.getTimezoneOffset() * 60000);
       setDate(localDate);
-      console.log(localDate);
       const folgasDoMes = folgasAgendadas.filter((folga) => {
         // Converte a data inicial da folga para um objeto Date
         const dataFolga = new Date(folga.data_inicial);
@@ -78,7 +75,7 @@ export default function Agendamento({ route, navigation }: any) {
         return dataFolga.getMonth() === date.getMonth();
       });
       setfolgasAgendadasDoMes(folgasDoMes)
-      console.log(folgasAgendadasDoMes);
+
     }
   };
 
@@ -100,10 +97,11 @@ export default function Agendamento({ route, navigation }: any) {
       return;
     }
 
-    if (date <= new Date() ) {
+
+    if (date.getDate() <= new Date().getDate()+1) {
       toast.show({
         title: 'Quem vive de passado é museu!!!!',
-        description: 'Stive, Marque sua Folga para uma data no futuro!!',
+        description: 'Stive, as Folgas devem ser agendas com ao menos 2 dias de antecedência!!!',
         backgroundColor: 'red.500',
       });
       return;
@@ -112,10 +110,9 @@ export default function Agendamento({ route, navigation }: any) {
       // Filtra as folgas mensais do mesmo mês
     const folgasMensaisNoMes = folgasAgendadasDoMes.filter((folga) => folga.motivo === 'FOLGA MENSAL');
 
-    console.log(` folgas mensais do mes ${folgasMensaisNoMes}`)
 
     // Verifica se já existe uma folga mensal no mesmo mês
-    if (folgasMensaisNoMes.length >= 0) {
+    if (folgasMensaisNoMes && folgasMensaisNoMes.length >=1 && motivoSelecionado === 'FOLGA MENSAL') {
       toast.show({
         title: 'Duplicidade',
         description: 'Você só pode agendar uma folga mensal por mês',
@@ -123,10 +120,10 @@ export default function Agendamento({ route, navigation }: any) {
       });
       return;
     }
+    
 
 
     if (!date || !grad || !re || !qra || !motivoTratado || !Quantidade) {
-      console.log(`data:${date} grad:${grad} re:${re} qra:${qra} motivoTratado:${motivoTratado} Quantidade:${Quantidade} motivo:${motivo} motivoselecionado: ${motivoSelecionado}`)
       toast.show({
         title: 'Erro ao agendar consulta',
         description: 'Preencha todos os campos',
@@ -156,6 +153,7 @@ export default function Agendamento({ route, navigation }: any) {
     }
   }
   
+
 
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: 'center', padding: 10 }}>

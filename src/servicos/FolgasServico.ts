@@ -33,16 +33,27 @@ export async function agendarFolgas(data: Date, gradId:string, reId: string, nom
   }
 }
 
-export async function cancelarFolgas(folgaId: string){
-  try {
-    const resultado = await api.delete(`/folgas/${folgaId}`)
-    console.log(resultado.data)
-    return resultado.data
-  }
-  catch (error) {
-    console.log(error)
-    return null
+export async function cancelarFolgas(folgaId: string) {
+  const token = await AsyncStorage.getItem('token');
+
+  if (!token) {
+    console.log('Token não encontrado no armazenamento local.');
+    return null;
   }
 
-  
+  try {
+    const resultado = await api.delete(`/folgas/id/${folgaId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(resultado.data);
+    return resultado.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
+
+
+
