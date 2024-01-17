@@ -2,6 +2,31 @@ import { Usuario } from "../interfaces/Usuario";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "./api";
 
+export async function pegaTodosUsuarios() {
+  const token = await AsyncStorage.getItem('token');
+
+  if (!token) {
+    console.log('Token não encontrado no armazenamento local.');
+    return null;
+  }
+
+  try {
+    const resultado = await api.get(`/usuarios`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // console.log(resultado.data);
+    return resultado.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+  
+  
+
 export async function cadastrarUsuario(usuario: Usuario){
   if(!usuario) return null;
 

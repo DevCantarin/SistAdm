@@ -21,7 +21,7 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
   const [folgasAgendadas, setFolgasAgendadas] = useState<Folga[]>([]);
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
   const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([]);
-  const [forceUpdate, setForceUpdate] = useState(0); // Variável de controle
+  const [forceUpdate, setForceUpdate] = useState(0); 
   const toast = useToast();
   const isFocused = useIsFocused();
 
@@ -125,7 +125,7 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
         folgasAgendadas.map((folga) => {
           const dataFolga = new Date(folga.data_inicial);
 
-          if (dataFolga.getDate()-1 > new Date().getDate()-1) {
+          if (dataFolga.getDate() - 1 > new Date().getDate() - 1 && dataFolga.getMonth() >= new Date().getMonth() &&  dataFolga.getFullYear() >= new Date().getFullYear()) {
             return (
               <CardEscala
                 key={folga.id}
