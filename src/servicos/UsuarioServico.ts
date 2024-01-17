@@ -50,7 +50,7 @@ export async function pegarDadosUsuarios(id: string) {
   }
 
   try {
-    const resultado = await api.get(`/usuarios/id/${id}`, {
+    const resultado = await api.get(`/usuarios/id/${id}`,  {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -63,6 +63,8 @@ export async function pegarDadosUsuarios(id: string) {
     return null;
   }
 }
+
+
 
 export async function editarFotoUsuario(id: string, foto: any) {
   const token = await AsyncStorage.getItem('token');
@@ -78,6 +80,27 @@ export async function editarFotoUsuario(id: string, foto: any) {
     console.log(foto);
     console.log(resultado.data.imagem);  
     return resultado.data.imagem;  
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+
+export async function editarUsuario(id: string, novosDados: any) {
+  const token = await AsyncStorage.getItem('token');
+
+  try {
+    console.log('Conteúdo de novosDados:', novosDados)
+    const resultado = await api.put(`/usuarios/id/${id}`, {funcao: novosDados}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log(`novos dados é: ${novosDados}`)
+
+    return resultado.data; // Retorna o objeto completo do usuário editado
   } catch (error) {
     console.log(error);
     return null;

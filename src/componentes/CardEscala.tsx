@@ -14,6 +14,7 @@ interface CardProps {
   foiAgendado?: boolean;
   onPress?: () => void;
   folga?: Folga;
+  funcao?: string
 }
 
 export function CardEscala({
@@ -23,6 +24,7 @@ export function CardEscala({
   foiAtendido,
   onPress,
   folga,
+  funcao
 }: CardProps) {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -58,6 +60,7 @@ export function CardEscala({
         <VStack pl="4">
           <Text fontSize="md" bold>{nome}</Text>
           <Text>{data}</Text>
+          {funcao && <Text>{funcao}</Text>}
         </VStack>
       </VStack>
       {foiAgendado && (

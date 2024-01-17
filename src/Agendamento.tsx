@@ -218,7 +218,7 @@ export default function Agendamento({ route, navigation }: any) {
           placeholder="Insira outro Motivo"
           value={motivo}
           onChangeText={setMotivo}
-        />
+          />
   )}
        
         
