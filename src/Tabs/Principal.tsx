@@ -125,7 +125,7 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
         folgasAgendadas.map((folga) => {
           const dataFolga = new Date(folga.data_inicial);
 
-          if (dataFolga.getDate() - 1 > new Date().getDate() - 1 && dataFolga.getMonth() >= new Date().getMonth() &&  dataFolga.getFullYear() >= new Date().getFullYear()) {
+          if (dataFolga.setDate(dataFolga.getDate())  >= new Date().setDate(new Date().getDate())) {
             return (
               <CardEscala
                 key={folga.id}
