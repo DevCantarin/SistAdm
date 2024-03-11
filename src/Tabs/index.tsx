@@ -26,11 +26,11 @@ const tabs = [
     component: Supervisor,
     icon: 'calendar'
   },
-  // {
-  //   name: 'Explorar',
-  //   component: Explorar,
-  //   icon: 'search'
-  // },
+  {
+    name: 'Explorar',
+    component: Explorar,
+    icon: 'search'
+  },
   {
     name: 'Perfil',
     component: Perfil,
