@@ -1,6 +1,22 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./api";
 
+export async function pegarTodasAsFolgas(){
+  const token = await AsyncStorage.getItem('token');
+  try{
+    const folgas = await api.get('/folgas',{
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    })
+    console.log(folgas.data)
+    return folgas.data
+  }
+  catch(error){
+    console.log(error);
+    return null;
+  }
+}
 
 
 export async function agendarFolgas(data: Date, gradId:string, reId: string, nomeId: string, motivoId:string, quantidadeId:string){

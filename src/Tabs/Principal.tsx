@@ -40,7 +40,7 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
       }
     }
     fetchData();
-  }, [isFocused, forceUpdate]); // Adicionei 'forceUpdate' como dependência para re-executar ao forçar a atualização
+  }, [isFocused, forceUpdate]); 
 
   useFocusEffect(
     React.useCallback(() => {

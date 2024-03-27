@@ -1,18 +1,15 @@
-import { VStack, Box, ScrollView } from "native-base";
-import { Botao } from "../componentes/Botao";
-import { CardEscala } from "../componentes/CardEscala";
-import { EntradaTexto } from "../componentes/EntradaTexto";
-import { Titulo } from "../componentes/Titulo";
-import React, { useEffect, useState } from "react";
-import { NavigationProps } from "../@types/navigation";
+import { Box, ScrollView } from "native-base";
+
+import { useEffect, useState } from "react";
+import { NavigationProps } from "./@types/navigation";
+import { Usuario } from "./interfaces/Usuario";
+import { Efetivo } from "./interfaces/Efetivo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { pegarDadosUsuarios, pegarFolgasUsuario } from "../servicos/UsuarioServico";
-import { Usuario } from "../interfaces/Usuario";
-import { pegaTodoEfetivo } from "../servicos/EfetivoServico";
-import { Efetivo } from "../interfaces/Efetivo";
-import { useFocusEffect } from "@react-navigation/native";
-import { pegarTodasAsFolgas } from "../servicos/FolgasServico";
-import { Folga } from "../interfaces/Folga";
+import { pegarDadosUsuarios } from "./servicos/UsuarioServico";
+import { pegaTodoEfetivo } from "./servicos/EfetivoServico";
+import { Botao } from "./componentes/Botao";
+import { Titulo } from "./componentes/Titulo";
+import { CardEscala } from "./componentes/CardEscala";
 
 export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
@@ -23,23 +20,6 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
   const [efetivo2Pel, setEfetivo2Pel] = useState([] as Efetivo[]);
   const [efetivo3Pel, setEfetivo3Pel] = useState([] as Efetivo[]);
   const [efetivo4Pel, setEfetivo4Pel] = useState([] as Efetivo[]);
-  const [folga, setFolga] = useState([] as Folga[])
-
-  useFocusEffect(
-    React.useCallback(() => {
-      async function folgaData() {
-        try {
-          const resultado = await pegarTodasAsFolgas();
-          setFolga(resultado);
-        } catch (error) {
-          console.error("Erro ao pegar as folgas:", error);
-          // Lidar com o erro, talvez definindo um estado de erro ou exibindo uma mensagem de erro para o usuário.
-        }
-      }
-      folgaData();
-    }, [dadosUsuarios.re, dadosUsuarios.dig])
-  );
-  
 
   useEffect(() => {
     async function fetchData() {
@@ -68,7 +48,7 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
       }
     }
     fetchData();
-  }, [efetivo1Pel, efetivo2Pel, efetivo3Pel, efetivo4Pel]);
+  }, [efetivo1Pel, efetivo2Pel, efetivo3Pel, efetivo4Pel]); // Adicionado efetivo1Pel e efetivo2Pel como dependências
 
   useEffect(()=> {
     async function fetchData() {
@@ -91,19 +71,14 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
 
       const efetivoFiltrado4: Efetivo[] = resultado.filter((mike: Efetivo) => mike.equipe === "4º PEL");
       setEfetivo4Pel(efetivoFiltrado4);
-
-      
     } 
     fetchData();
   }, []); 
-  
-  // const Pendencias = funcao.filter((mike)=> )
 
   return(
     <ScrollView>
       <Botao>EFETIVO SOB SEU COMANDO</Botao>
-      <Titulo color="blue.500" alignSelf="center" paddingBottom={1}>{dadosUsuarios.funcao}</Titulo>
-      <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>PENDÊNCIAS</Titulo>
+      <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>{dadosUsuarios.funcao}</Titulo>
       {funcao.map((mike, index) => (
         <Box key={index} >
         <CardEscala nome={`${mike.nome} ${mike.equipe}`}/>
