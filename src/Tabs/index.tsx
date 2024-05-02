@@ -4,6 +4,8 @@ import Supervisor from "./Supervisor";
 import Principal from "./Principal";
 import Explorar from "./Explorar";
 import Perfil from "./Perfil";
+import { Icon } from "native-base";
+
 
 const Tab = createBottomTabNavigator()
 
