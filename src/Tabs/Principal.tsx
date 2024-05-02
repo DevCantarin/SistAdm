@@ -1,20 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, ScrollView, useToast } from 'native-base';
+import { StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationProps } from '../@types/navigation';
+import { useFocusEffect } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { Container, Divider, ScrollView, View, Wrap, useToast } from 'native-base';
+import { useIsFocused } from '@react-navigation/native';
+import { format } from 'date-fns';
+import {Image, Text} from 'react-native'
+import { TouchableOpacity } from 'react-native';
+
 import { Botao } from '../componentes/Botao';
 import { CardEscala } from '../componentes/CardEscala';
 import { Titulo } from '../componentes/Titulo';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { pegarDadosUsuarios, pegarFolgasUsuario } from '../servicos/UsuarioServico';
-import { NavigationProps } from '../@types/navigation';
-import { useIsFocused } from '@react-navigation/native';
 import { converterDataParaString } from '../utils/conversoes';
 import { Usuario } from '../interfaces/Usuario';
 import { Escala } from '../interfaces/Escala';
 import { Folga } from '../interfaces/Folga';
-import { useFocusEffect } from '@react-navigation/native';
 import { pegarEscalasUsuario } from '../servicos/escalaServico';
-import { format } from 'date-fns';
 import { cancelarFolgas } from '../servicos/FolgasServico';
+import { icone } from '../componentes/icone';
+
+
+
+const estilos = StyleSheet.create({
+  principal:{
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    // backgroundColor: 'blue'
+
+  },
+
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#fff',
+    borderRadius: 10
+
+  },
+
+  elemento:{
+    margin: 10
+
+  },
+
+  nomeIcone:{
+    textAlign: 'center',
+    color:'black',
+    fontSize: 10,
+    margin:10
+  },
+  icone:{
+    width: 100,
+    height: 100,
+    margin: 5,
+    alignItems: 'center'
+
+  },
+  titulo:{
+    margin: 10,
+    
+  }
+
+  
+
+})
 
 export default function Principal({ navigation }: NavigationProps<'Principal'>) {
   const [mikeId, setMikeId] = useState('');
@@ -92,55 +147,18 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
    
 
   return (
-    <ScrollView p="5">
-      <Titulo color="blue.500">Minhas Escalas</Titulo>
-      <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>
-        Agendar nova Folga
-      </Botao>
-
-      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
-        Previsão de Próximas Escalas
-      </Titulo>
-
-      {dadosEscalas.length > 0 &&
-        dadosEscalas.map((escala) => {
-          const dataEscala = new Date(escala.data);
-
-          if (dataEscala > new Date()) {
-            return (
-              <CardEscala key={escala.id} nome={`${escala.nome} ${escala.funcao}`} 
-               data={`${format(dataEscala, 'dd/MM/yyyy')}   ${escala.inicio} - ${escala.termino}`} />
-            );
-          }
-
-          return null;
-        })}
-
-      <Divider mt={5} />
-
-      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
-        Folgas Agendadas
-      </Titulo>
-      {folgasAgendadas.length > 0 &&
-        folgasAgendadas.map((folga) => {
-          const dataFolga = new Date(folga.data_inicial);
-
-          if (dataFolga.setDate(dataFolga.getDate())  >= new Date().setDate(new Date().getDate())) {
-            return (
-              <CardEscala
-                key={folga.id}
-                nome={`${dadosUsuarios?.nome}  ${folga.motivo}`}
-                data={converterDataParaString(folga.data_inicial)}
-                foiAtendido
-                foiAgendado
-                onPress={() => handleCancelarFolga(folga)}
-                folga={folga}
-              />
-            );
-          }
-
-          return null;
-        })}
+    <ScrollView p="5" contentContainerStyle={estilos.principal}>
+      <Titulo style={estilos.titulo}>SistADM</Titulo>
+      <View style={estilos.container}>
+        {icone.map((fig, index) => (
+          <TouchableOpacity key={index} onPress={() => navigation.navigate(fig.nome)}>
+            <View> 
+              <Text style={estilos.nomeIcone}>{fig.nome}</Text>
+              <Image style={estilos.icone} source={fig.imagem} />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
     </ScrollView>
-);
+  );
 }
