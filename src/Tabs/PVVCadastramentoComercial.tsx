@@ -9,6 +9,8 @@ import { pegarDadosUsuarios } from "../servicos/UsuarioServico";
 import { CabecalhoPVS } from "../componentes/cabecalhoPVS"
 import { EntradaTexto } from "../componentes/EntradaTexto"
 import { Botao } from "../componentes/Botao";
+import { cadastrarComercial } from "../servicos/PvsCadastramentoComercialServico";
+
 
 const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
 const regiao = ["CPP-1 (ÁREA DA CIA)", "CPP-2 (CONJ METALÚGICOS)"];
@@ -50,8 +52,8 @@ export default function PVSCadastroComercial(){
     const [qra, setQra] = useState('');
     const [cep, setCep] = useState('');
     const [regiaoSelecionada, setRegiaoSelecionada] = useState('');
-    const [acaoSelecionada, setAcaoSelecionada] = useState('');
-    const [OPMSelecionada, setOPMSelecionada] = useState('');
+    const [termoSelecionado, setTermoSelecionado] = useState('');
+    const [unidadeSelecionada, setUnidadeSelecionada] = useState('');
     
 
     const [nome, setNome] = useState("")
@@ -110,6 +112,71 @@ export default function PVSCadastroComercial(){
       }
     }
 
+    async function cadastrar() {
+        if (isNaN(parseFloat(numero))) {
+          toast.show({
+            title: 'Erro ao agendar consulta',
+            description: 'A número da residência deve ser um número válido',
+            backgroundColor: 'red.500',
+          });
+          return;
+        }
+    
+        if (!regiaoSelecionada || !termoSelecionado || !unidadeSelecionada ||!nome ||!cep ||!endereco ||!numero ||!telefone || proprietario ||  nascimento || rg || telefoneProprietario || re)   {
+            console.log(`regiaoSelecionada e${regiaoSelecionada}`)
+            console.log(`termoSelecionado e${termoSelecionado}`)
+            console.log(`unidadeSelecionada e${unidadeSelecionada}`)
+            console.log(`nome e${nome}`)
+            console.log(`cep e${cep}`)
+            console.log(`endereco e${endereco}`)
+            console.log(`numero e${numero}`)
+            console.log(`telefone e${telefone}`)
+            console.log(`proprietario e${proprietario}`)
+            console.log(`nascimento e${nascimento}`)
+            console.log(`rg e${rg}`)
+            console.log(`telefoneProprietario e${telefoneProprietario}`)
+            console.log(`re e${re}`)
+
+
+
+            toast.show({
+            title: 'Erro ao agendar consulta',
+            description: 'Preencha todos os campos',
+            backgroundColor: 'red.500',
+          });
+          return;
+        }
+    
+        try {
+          const resultado = await cadastrarComercial(regiaoSelecionada, termoSelecionado, unidadeSelecionada,nome, cep,endereco, numero, telefone, proprietario,  nascimento, rg, telefoneProprietario, re);
+          if (resultado) {
+            toast.show({
+              title: 'Folga agendada com sucesso',
+              backgroundColor: 'green.500',
+            });
+            setRegiaoSelecionada("")
+            setTermoSelecionado("")
+            setUnidadeSelecionada("")
+            setEndereco("")
+            setCep("")
+            setNumero("")
+            setEndereco("")
+            setNumero('')
+            setProprietario("")
+            setRG("")
+            setTelefone('')
+          } else {
+            toast.show({
+              title: 'Erro ao agendar Folga',
+              description: 'VERIFIQUE OS DADOS',
+              backgroundColor: 'red.500',
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
     return(
         <ScrollView>
 
@@ -134,11 +201,11 @@ export default function PVSCadastroComercial(){
                         <Text style={estilos.texto}>TERMO DE ACEITAÇÃO</Text>
                             <Select style={estilos.selecao}
                                 marginTop={2}
-                                selectedValue={acaoSelecionada}
+                                selectedValue={termoSelecionado}
                                 minWidth={200}
                                 accessibilityLabel="Selecione cadastro ou exclusão"
                                 placeholder="Selecione cadastro ou exclusão"
-                                onValueChange={(itemValue) => setAcaoSelecionada(itemValue)}
+                                onValueChange={(itemValue) => setTermoSelecionado(itemValue)}
                                 >
                                 {aceita.map((opcao, index) => (
                                     <Select.Item key={index} label={opcao} value={opcao} />
@@ -149,11 +216,11 @@ export default function PVSCadastroComercial(){
                         <Text style={estilos.texto}>UNIDADE OPERACIONAL</Text>
                             <Select style={estilos.selecao}
                                 marginTop={2}
-                                selectedValue={OPMSelecionada}
+                                selectedValue={unidadeSelecionada}
                                 minWidth={200}
                                 accessibilityLabel="Selecione cadastro ou exclusão"
                                 placeholder="Selecione cadastro ou exclusão"
-                                onValueChange={(itemValue) => setOPMSelecionada(itemValue)}
+                                onValueChange={(itemValue) => setUnidadeSelecionada(itemValue)}
                                 >
                                 {OPM.map((opcao, index) => (
                                     <Select.Item key={index} label={opcao} value={opcao} />
@@ -242,9 +309,18 @@ export default function PVSCadastroComercial(){
                     onChangeText={(itemValue)=>setTelefoneProprietario(itemValue)}
                 /> 
                 </Box>
+                <Box style={estilos.container}>
+                    <EntradaTexto
+                    estiloTexto={estilos.texto}
+                    label="ENCARREGADO"
+                    placeholder=""
+                    value={re}
+                    onChangeText={(itemValue)=>setTelefoneProprietario(itemValue)}
+                /> 
+                </Box>
 
                 
-                <Botao>Enviar</Botao>
+                <Botao onPress={cadastrar} >Enviar</Botao>
             </View>  
 
         </ScrollView>
