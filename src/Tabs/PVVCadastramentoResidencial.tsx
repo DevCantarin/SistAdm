@@ -2,10 +2,10 @@ import { StyleSheet, View,Text } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Box, ScrollView, Select, useToast } from "native-base"
 import { CheckBox } from 'react-native-elements';
-import apiViaCep from "../servicos/apiViaCep";
 import { useEffect, useState } from "react";
 
 
+import apiViaCep from "../servicos/apiViaCep";
 import { Botao } from "../componentes/Botao";
 import { cadastrarResidencia } from "../servicos/PvsCadastramentoResisdencialServico";
 import { pegarDadosUsuarios } from "../servicos/UsuarioServico";

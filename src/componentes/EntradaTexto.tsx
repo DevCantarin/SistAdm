@@ -1,5 +1,5 @@
 import { Input, FormControl } from "native-base";
-import { NativeSyntheticEvent, TextInputFocusEventData, ViewStyle } from "react-native";
+import { NativeSyntheticEvent, TextInputFocusEventData, TextStyle, Text } from "react-native";
 
 interface InputProps {
   label?: string;
@@ -7,10 +7,10 @@ interface InputProps {
   secureTextEntry?: boolean;
   value?: string;
   bgColor?: string;
-  inputStyle?: ViewStyle;
-  estiloTexto?: ViewStyle;
+  inputStyle?: TextStyle;
+  estiloTexto?: TextStyle;
   onChangeText?: (text: string) => void;
-  onBlur?: (event: NativeSyntheticEvent<TextInputFocusEventData>) => void; // Alteração aqui
+  onBlur?: (event: NativeSyntheticEvent<TextInputFocusEventData>) => void;
 }
 
 export function EntradaTexto({ 
@@ -26,7 +26,7 @@ export function EntradaTexto({
 }: InputProps): JSX.Element {
   return (
     <FormControl mt={3}>
-      {label && <FormControl.Label style={estiloTexto ? estiloTexto : null}>{label}</FormControl.Label>}
+      {label && <Text style={estiloTexto ? estiloTexto : { textAlign: "center", backgroundColor: "#B0C4DE", borderRadius: 20, fontWeight: "bold"}}>{label}</Text>}
       <Input
         placeholder={placeholder}
         size="lg"

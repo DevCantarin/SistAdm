@@ -1,9 +1,13 @@
 import { StyleSheet, View,Text } from "react-native"
+import { Box, ScrollView, Select, useToast } from "native-base"
+import { useState, useEffect } from "react";
+import { CheckBox } from 'react-native-elements';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import apiViaCep from "../servicos/apiViaCep";
+import { pegarDadosUsuarios } from "../servicos/UsuarioServico";
 import { CabecalhoPVS } from "../componentes/cabecalhoPVS"
 import { EntradaTexto } from "../componentes/EntradaTexto"
-import { Box, ScrollView, Select } from "native-base"
-import { CheckBox } from 'react-native-elements';
-import { useState } from "react";
 import { Botao } from "../componentes/Botao";
 
 const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
@@ -40,9 +44,15 @@ const estilos = StyleSheet.create({
 })
 
 export default function PVSCadastroComercial(){
-    const [cadastroSelecionado, setCadastroSelecionado] = useState('');
+    const [usuario, setUsuario] = useState('');
+    const [grad, setGrad] = useState('');
+    const [re, setRe] = useState('');
+    const [qra, setQra] = useState('');
+    const [cep, setCep] = useState('');
     const [regiaoSelecionada, setRegiaoSelecionada] = useState('');
     const [acaoSelecionada, setAcaoSelecionada] = useState('');
+    const [OPMSelecionada, setOPMSelecionada] = useState('');
+    
 
     const [nome, setNome] = useState("")
     const [endereco, setEndereco] = useState("")
@@ -53,6 +63,52 @@ export default function PVSCadastroComercial(){
     const [rg, setRG] = useState("")
     const [telefoneProprietario, setTelefoneProprietario] = useState("")
 
+    const toast = useToast();
+
+    useEffect(() => {
+        async function dadosUsuarios() {
+          const mikeId = await AsyncStorage.getItem('mikeId');
+          if (!mikeId) { 
+            console.log("nao achou mikeId")
+            return null} ;
+    
+          const resultadoMike = await pegarDadosUsuarios(mikeId);
+          if (resultadoMike) {
+            setUsuario(resultadoMike);
+            setGrad(resultadoMike.grad);
+            setRe(`${resultadoMike.re}-${resultadoMike.dig}`);
+            setQra(resultadoMike.nome);
+
+            console.log(`o re é ${re}`)
+          }
+        }
+    
+        dadosUsuarios();
+      }, []);
+    
+    async function buscarCep(){
+      if(cep == ""){
+        toast.show({
+          title: 'CEP NÃO DIGITADO',
+          description: 'Digite um CEP valido para consulta',
+          backgroundColor: 'red.500',
+        });
+        return;
+      }
+      try {
+          const resposta : any = await apiViaCep.get(`/${cep}/json/`)
+          setEndereco(resposta.data.logradouro)
+      } catch (error) {
+        console.log("ERRO" + error)
+        toast.show({
+          title: 'CEP invalido',
+          description: 'Digite o cep sem "-" ou "." apenas numeros',
+          backgroundColor: 'red.500',
+        });
+        setCep("")
+        return;
+      }
+    }
 
     return(
         <ScrollView>
@@ -93,11 +149,11 @@ export default function PVSCadastroComercial(){
                         <Text style={estilos.texto}>UNIDADE OPERACIONAL</Text>
                             <Select style={estilos.selecao}
                                 marginTop={2}
-                                selectedValue={acaoSelecionada}
+                                selectedValue={OPMSelecionada}
                                 minWidth={200}
                                 accessibilityLabel="Selecione cadastro ou exclusão"
                                 placeholder="Selecione cadastro ou exclusão"
-                                onValueChange={(itemValue) => setAcaoSelecionada(itemValue)}
+                                onValueChange={(itemValue) => setOPMSelecionada(itemValue)}
                                 >
                                 {OPM.map((opcao, index) => (
                                     <Select.Item key={index} label={opcao} value={opcao} />
@@ -109,16 +165,27 @@ export default function PVSCadastroComercial(){
                         estiloTexto={estilos.texto}
                         label="NOME DO COMÉRCIO"
                         placeholder="exp Loja do Mikão"
-                        value=""
-                        // onChangeText
+                        value={nome}
+                        onChangeText= {(itemValue)=> setNome(itemValue)}
+                        />
+                    </Box>
+                    <Box style={estilos.container}>          
+                        <EntradaTexto
+                        estiloTexto={estilos.texto}
+                        label="CEP ENDEREÇO DO COMÉRCIO"
+                        placeholder="digite cep para preenchimento do endereço "
+                        value= {cep}
+                        onChangeText={(itemValue)=>setCep(itemValue)}
                         />
                     </Box>
                     <Box style={estilos.container}>          
                         <EntradaTexto
                         estiloTexto={estilos.texto}
                         label="ENDEREÇO DO COMÉRCIO"
-                        placeholder="endereço sem número"
-                        value=""
+                        placeholder="endereço buscado pelo CEP"
+                        value= {endereco}
+                        onChangeText={(itemValue)=>setEndereco(itemValue)}
+                        onBlur={buscarCep}
                         />
                     </Box>
                     <Box style={estilos.container}>          
@@ -126,7 +193,8 @@ export default function PVSCadastroComercial(){
                         estiloTexto={estilos.texto}
                         label="NÚMERO DO COMÉRCIO"
                         placeholder="APENAS O NÚMERO"
-                        value=""
+                        value={numero}
+                        onChangeText={(itemValue)=>setNumero(itemValue)}
                         />
                     </Box>
                 <Box style={estilos.container}>
@@ -134,8 +202,8 @@ export default function PVSCadastroComercial(){
                     estiloTexto={estilos.texto}
                     label="TELEFONE DO COMÉRCIO PARA WHATSAPP"
                     placeholder="exp: (XX)91234-5678"
-                    value=""
-                    //   onChangeText=""
+                    value={telefone}
+                    onChangeText={(itemValue)=>setTelefone(itemValue)}
                 /> 
                 </Box>
                 <Box style={estilos.container}>
@@ -143,8 +211,8 @@ export default function PVSCadastroComercial(){
                     estiloTexto={estilos.texto}
                     label="NOME COMPLETO DO PROPRIETÁRIO OU RESPONSÁVEL"
                     placeholder="NÃO ABREVIAR'"
-                    value=""
-                    //   onChangeText=""
+                    value={proprietario}
+                    onChangeText={(itemValue)=>setProprietario(itemValue)}
                 /> 
                 </Box>
                 <Box style={estilos.container}>
@@ -152,8 +220,8 @@ export default function PVSCadastroComercial(){
                     estiloTexto={estilos.texto}
                     label="DATA DE NASCIMENTO DO PROPRIETÁRIO / RESPONSÁVEL"
                     placeholder="exp: 01/01/2000"
-                    value=""
-                    //   onChangeText=""
+                    value={nascimento}
+                    onChangeText={(itemValue)=>setNascimento(itemValue)}
                 /> 
                 </Box>
                 <Box style={estilos.container}>
@@ -161,8 +229,8 @@ export default function PVSCadastroComercial(){
                     estiloTexto={estilos.texto}
                     label="RG DO PROPRIETÁRIO / RESPONSÁVEL"
                     placeholder="exp: 01.123.456-0 OU 01.123.456-X"
-                    value=""
-                    //   onChangeText=""
+                    value={rg}
+                    onChangeText={(itemValue)=>setRG(itemValue)}
                 /> 
                 </Box>
                 <Box style={estilos.container}>
@@ -170,8 +238,8 @@ export default function PVSCadastroComercial(){
                     estiloTexto={estilos.texto}
                     label="TELEFONE DO PROPRIETÁRIO / RESPONSÁVEL"
                     placeholder="exp: (XX)91234-5678"
-                    value=""
-                    //   onChangeText=""
+                    value={telefoneProprietario}
+                    onChangeText={(itemValue)=>setTelefoneProprietario(itemValue)}
                 /> 
                 </Box>
 
