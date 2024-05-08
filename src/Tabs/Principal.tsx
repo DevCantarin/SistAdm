@@ -3,18 +3,13 @@ import { StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationProps } from '../@types/navigation';
 import { useFocusEffect } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { Container, Divider, ScrollView, View, Wrap, useToast } from 'native-base';
+import { ScrollView, View,  useToast } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
-import { format } from 'date-fns';
 import {Image, Text} from 'react-native'
 import { TouchableOpacity } from 'react-native';
 
-import { Botao } from '../componentes/Botao';
-import { CardEscala } from '../componentes/CardEscala';
 import { Titulo } from '../componentes/Titulo';
 import { pegarDadosUsuarios, pegarFolgasUsuario } from '../servicos/UsuarioServico';
-import { converterDataParaString } from '../utils/conversoes';
 import { Usuario } from '../interfaces/Usuario';
 import { Escala } from '../interfaces/Escala';
 import { Folga } from '../interfaces/Folga';

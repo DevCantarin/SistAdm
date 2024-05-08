@@ -1,16 +1,15 @@
 import { StyleSheet, View,Text,Image,TouchableOpacity } from "react-native"
 import { Box, ScrollView, Select } from "native-base"
 
-
+import { iconeTipoPVS } from "../componentes/iconeTipoPVS"
 import { NavigationProps } from '../@types/navigation';
-import { iconeOpcoesPVS} from "../componentes/iconeOpcoesPVS";
 
 
 const estilos = StyleSheet.create({
     principal:{
       flex: 1,
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'space-around',
       // backgroundColor: 'blue'
   
     },
@@ -18,12 +17,11 @@ const estilos = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-      justifyContent: "space-evenly",
+      justifyContent: 'space-around',
       flexDirection: 'row',
-      // flexWrap: 'wrap',
+      flexWrap: 'wrap',
       backgroundColor: '#fff',
-      borderRadius: 10,
-      // backgroundColor: 'blue'
+      borderRadius: 10
   
     },
   
@@ -57,19 +55,17 @@ const estilos = StyleSheet.create({
 
 
 
-export default function PVS({ navigation }: NavigationProps<'PVS'>){
+export default function CadastroPVS({ navigation }: NavigationProps<'PVS'>){
 
 
     return(
         <ScrollView p="5" contentContainerStyle={estilos.principal}>
             <View style = {estilos.container}>
-                {iconeOpcoesPVS.map((fig, index) => (
+                {iconeTipoPVS.map((fig, index) => (
           <TouchableOpacity key={index} onPress={() => navigation.navigate(fig.nome)}>
-            <View style ={estilos.container} > 
-              <View>
-                <Text style={estilos.nomeIcone}>{fig.nome}</Text>
-                <Image style={estilos.icone} source={fig.imagem} />
-              </View>
+            <View> 
+              <Text style={estilos.nomeIcone}>{fig.nome}</Text>
+              <Image style={estilos.icone} source={fig.imagem} />
             </View>   
           </TouchableOpacity>
         ))}

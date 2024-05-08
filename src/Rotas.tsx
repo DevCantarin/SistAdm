@@ -13,6 +13,10 @@ import PVS from "./Tabs/PVS"
 import PVSCadastroResidencial from "./Tabs/PVVCadastramentoResidencial";
 import PVSCadstroComercial from "./Tabs/PVVCadastramentoComercial"
 import PVSCadastroEscolar from "./Tabs/PVVCadastramentoEscolar";
+import CadastroPVS from "./Tabs/CadastroPVS";
+import PVSVisita from "./Tabs/PVSVisita";
+import ESCALA from "./Tabs/ESCALA";
+import Comunitaria from "./Tabs/visitaComunitaria";
 
 export default function Rotas(){
   return(
@@ -42,6 +46,15 @@ export default function Rotas(){
         <Tab.Screen 
           name="Escolar" component={PVSCadastroEscolar as React.FC} options={{ headerShown: false }}
         />
+        <Tab.Screen 
+          name="CadastroPVS" component={CadastroPVS as React.FC} options={{ headerShown: false }}
+        /><Tab.Screen 
+        name="VisitaPVS" component={PVSVisita as React.FC} options={{ headerShown: false }}
+        /><Tab.Screen 
+        name="ESCALA" component={ESCALA as React.FC} options={{ headerShown: false }}
+      /><Tab.Screen 
+      name="Comunitaria" component={Comunitaria as React.FC} options={{ headerShown: false }}
+    />
       </Tab.Navigator>
     </NavigationContainer>
   )

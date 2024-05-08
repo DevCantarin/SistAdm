@@ -16,7 +16,7 @@ import { pegarEscalasUsuario } from '../servicos/escalaServico';
 import { format } from 'date-fns';
 import { cancelarFolgas } from '../servicos/FolgasServico';
 
-export default function Principal({ navigation }: NavigationProps<'Principal'>) {
+export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
   const [mikeId, setMikeId] = useState('');
   const [folgasAgendadas, setFolgasAgendadas] = useState<Folga[]>([]);
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);

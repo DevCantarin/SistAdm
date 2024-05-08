@@ -4,7 +4,6 @@ import Supervisor from "./Supervisor";
 import Principal from "./Principal";
 import Explorar from "./Explorar";
 import Perfil from "./Perfil";
-import { Icon } from "native-base";
 
 
 const Tab = createBottomTabNavigator()
@@ -23,16 +22,16 @@ const tabs = [
     component: Principal,
     icon: 'home'
   },
-  {
-    name: 'Supervisor',
-    component: Supervisor,
-    icon: 'calendar'
-  },
-  {
-    name: 'Explorar',
-    component: Explorar,
-    icon: 'search'
-  },
+  // {
+  //   name: 'Supervisor',
+  //   component: Supervisor,
+  //   icon: 'calendar'
+  // },
+  // {
+  //   name: 'Explorar',
+  //   component: Explorar,
+  //   icon: 'search'
+  // },
   {
     name: 'Perfil',
     component: Perfil,

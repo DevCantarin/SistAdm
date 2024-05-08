@@ -11,12 +11,49 @@ import { pegarDadosUsuarios } from "../servicos/UsuarioServico";
 import { Usuario } from "../interfaces/Usuario";
 import { CabecalhoPVS } from "../componentes/cabecalhoPVS"
 import { EntradaTexto } from "../componentes/EntradaTexto"
+import { NavigationProps } from "../@types/navigation";
 
 const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
 const regiao = ["CPP-1 (ÁREA DA CIA)", "CPP-2 (CONJ METALÚGICOS)"];
 const acao = ["CADASTRO COMERCIAL","CADASTRO RESIDENCIAL","CADASTRO ESCOLAR"]
 const aceita = ["SIM","NÃO"]
 const OPM = ["BATALHÃO PM", "1ª CIA PM", "2ª CIA PM", "3ª CIA PM", "4ª CIA PM", "5ª CIA PM", "FORÇA TÁTICA"]
+
+
+const listaRuas = [
+    { cep: "06150-130", nome: "Rua Paulo Kusma" },
+    { cep: "06150-135", nome: "Rua Isaura Santachiara Lunardi" },
+    { cep: "06150-140", nome: "Rua Valmir Pinto de Almeida" },
+    { cep: "06150-142", nome: "Rua Fábio Renato Maciel" },
+    { cep: "06150-150", nome: "Rua Júlio de Mesquita Filho" },
+    { cep: "06150-160", nome: "Rua Fernando Ananias Cardoso" },
+    { cep: "06150-170", nome: "Rua Sérgio Pompeo" },
+    { cep: "06150-180", nome: "Rua João de Sá" },
+    { cep: "06150-185", nome: "Rua João Salustiano Teixeira Bueno" },
+    { cep: "06150-190", nome: "Rua Santo Dias da Silva" },
+    { cep: "06150-200", nome: "Rua Ida Rebellato Garcia" },
+    { cep: "06150-210", nome: "Rua Antônio Coutinho Neto" },
+    { cep: "06150-220", nome: "Rua Antônio da Silva" },
+    { cep: "06150-230", nome: "Rua Genoveva Soares Moreira" },
+    { cep: "06150-240", nome: "Rua Jandira de Marins Peixoto" },
+    { cep: "06150-250", nome: "Rua Maria Menck" },
+    { cep: "06150-260", nome: "Rua Joichi Yamaji" },
+    { cep: "06150-270", nome: "Rua Espedito Izidio Andrade" },
+    { cep: "06150-390", nome: "Rua Manoel de Souza e Silva" },
+    { cep: "06150-400", nome: "Rua João Vieira Cassiano Júnior" },
+    { cep: "06150-560", nome: "Rua Firmino Martins" },
+    { cep: "06150-570", nome: "Rua Virgilio Silva" },
+    { cep: "06150-580", nome: "Rua Arnaldinha dos Santos Cordeiro" },
+    { cep: "06150-600", nome: "Rua Walter Vieira Marques" },
+    { cep: "06150-610", nome: "Rua Avelino Braz" },
+    { cep: "06150-620", nome: "Rua Edson Hissnauer Adão" },
+    { cep: "06150-665", nome: "Rua Nelson Vieira Lima" },
+    { cep: "06150-740", nome: "Estrada das Palmas" }
+  ];
+  
+
+  
+  
 
 
 
@@ -46,7 +83,7 @@ const estilos = StyleSheet.create({
     }
 
 })
-export default function PVSCadastroResidencial( navigation: any){
+export default function Comunitaria( navigation : any ){
     const [regiaoSelecionada, setRegiaoSelecionada] = useState('');
     const [termoSelecionado, setTermoSelecionado] = useState('');
     const [unidadeSelecionada, setUnidadeSelecionada] = useState('');
@@ -166,7 +203,7 @@ export default function PVSCadastroResidencial( navigation: any){
             <View>
                 <CabecalhoPVS/>
                     <Box style={estilos.container}>
-                        <Text style={estilos.texto}>REGIÃO</Text>
+                        <Text style={estilos.texto}>RONDADO</Text>
                             <Select style={estilos.selecao}
                                 marginTop={2 }
                                 selectedValue={regiaoSelecionada}
@@ -175,120 +212,33 @@ export default function PVSCadastroResidencial( navigation: any){
                                 placeholder="Selecione a REGIÃO"
                                 onValueChange={(itemValue) => setRegiaoSelecionada(itemValue)}
                                 >
-                                {regiao.map((opcao, index) => (
-                                    <Select.Item key={index} label={opcao} value={opcao} />
-                                ))}
-                            </Select>
-                    </Box>
-                    <Box style={estilos.container}>
-                        <Text style={estilos.texto}>TUTOR?</Text>
-                            <Select style={estilos.selecao}
-                                marginTop={2}
-                                selectedValue={termoSelecionado}
-                                minWidth={200}
-                                accessibilityLabel="TUTOR?"
-                                placeholder="TUTOR?"
-                                onValueChange={(itemValue) => setTermoSelecionado(itemValue)}
-                                >
-                                {aceita.map((opcao, index) => (
-                                    <Select.Item key={index} label={opcao} value={opcao} />
-                                ))}
-                            </Select>
-                    </Box>
-                    <Box style={estilos.container}>
-                        <Text style={estilos.texto}>UNIDADE OPERACIONAL</Text>
-                            <Select style={estilos.selecao}
-                                marginTop={2}
-                                selectedValue={unidadeSelecionada}
-                                minWidth={200}
-                                accessibilityLabel="Selecione cadastro ou exclusão"
-                                placeholder="Selecione cadastro ou exclusão"
-                                onValueChange={(itemValue) => setUnidadeSelecionada(itemValue)}
-                                >
-                                {OPM.map((opcao, index) => (
-                                    <Select.Item key={index} label={opcao} value={opcao} />
+                                {listaRuas.map((opcao, index) => (
+                                    <Select.Item key={index} label={opcao.nome} value={opcao.nome} />
                                 ))}
                             </Select>
                     </Box>
                     <Box style={estilos.container}>          
                         <EntradaTexto
                         estiloTexto={estilos.texto}
-                        label="CEP DA RESIDÊNDIA"
-                        placeholder="DIGITE O CEP DA RESIDÊNCIA"
+                        label="NOVIDADES"
+                        placeholder="DIGITE AS NOVIDADES CONSTATADAS"
                         value = {cep}
                         onChangeText={setCep}
                         onBlur = {buscarCep}
 
                         />
                     </Box>
-                    <Box style={estilos.container}>          
+                    <Box style={estilos.container}>
                         <EntradaTexto
                         estiloTexto={estilos.texto}
-                        label="ENDEREÇO DA RESIDÊNDIA"
-                        placeholder="ENDEREÇO SEM Nº"
-                        value = {endereco}
-                        onChangeText={setEndereco}
-
-                        />
+                        label="RE do Cadastrador"
+                        placeholder=""
+                        value= {re}
+                        onChangeText= {setTelefone}
+                    /> 
                     </Box>
-                    <Box style={estilos.container}>          
-                        <EntradaTexto
-                        estiloTexto={estilos.texto}
-                        label="NÚMERO DA RESIDÊNCIA"
-                        placeholder="APENAS O NÚMERO"
-                        value={numero}
-                        onChangeText={setNumero}
-                        />
-                    </Box>
-
-
-                <Box style={estilos.container}>
-                    <EntradaTexto
-                        estiloTexto={estilos.texto}    
-                        label="COMPEMENTO DA RESIDÊNCIA"
-                        placeholder="EXEMPLO 'CASA-1', 'APTO 02'"
-                        value={complemento}
-                        onChangeText={setComplemento}
-                        /> 
-                    </Box>
-                <Box style={estilos.container}>
-                <EntradaTexto
-                    estiloTexto={estilos.texto}
-                    label="NOME COMPLETO DO MORADOR"
-                    placeholder="exp: Fulando de Tal"
-                    value={morador}
-                    onChangeText={setMorador}
-                /> 
-                </Box>
-                <Box style={estilos.container}>
-                    <EntradaTexto
-                    estiloTexto={estilos.texto}
-                    label="RG DO MORADOR"
-                    placeholder="exp: '01.123.456-0' OU '01.123.456-X'"
-                    value= {rg}
-                    onChangeText= {setRG}
-                /> 
-                </Box>
-                <Box style={estilos.container}>
-                    <EntradaTexto
-                    estiloTexto={estilos.texto}
-                    label="TELEFONE PESSOAL DO MORADOR"
-                    placeholder="exp: '(XX)91234-5678' - '(XX)1234-5678'"
-                    value= {telefone}
-                    onChangeText= {setTelefone}
-                /> 
-                </Box>
-                <Box style={estilos.container}>
-                    <EntradaTexto
-                    estiloTexto={estilos.texto}
-                    label="RE do Cadastrador"
-                    placeholder=""
-                    value= {re}
-                    onChangeText= {setTelefone}
-                /> 
-                </Box>
                 
-                <Botao onPress={cadastrar} >Enviar</Botao>
+                    <Botao onPress={cadastrar} >Enviar</Botao>
             </View>  
 
         </ScrollView>

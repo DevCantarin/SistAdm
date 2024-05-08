@@ -12,6 +12,7 @@ export type ListaTelas = {
   Tabs: undefined;
   Agendamento: undefined;
   PVS:undefined
+  ESCALA:undefined
   
 }
 

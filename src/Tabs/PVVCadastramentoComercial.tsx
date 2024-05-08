@@ -16,7 +16,7 @@ const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
 const regiao = ["CPP-1 (ÁREA DA CIA)", "CPP-2 (CONJ METALÚGICOS)"];
 const acao = ["CADASTRO COMERCIAL","CADASTRO RESIDENCIAL","CADASTRO ESCOLAR"]
 const aceita = ["SIM","NÃO"]
-const OPM = ["BATALHÃO PM","1ª CIA PM", "1ª CIA PM", "2ª CIA PM", "3ª CIA PM", "4ª CIA PM", "5ª CIA PM", "FORÇA TÁTICA"]
+const OPM = ["BATALHÃO PM", "1ª CIA PM", "2ª CIA PM", "3ª CIA PM", "4ª CIA PM", "5ª CIA PM", "FORÇA TÁTICA"]
 
 
 
@@ -122,20 +122,20 @@ export default function PVSCadastroComercial(){
           return;
         }
     
-        if (!regiaoSelecionada || !termoSelecionado || !unidadeSelecionada ||!nome ||!cep ||!endereco ||!numero ||!telefone || proprietario ||  nascimento || rg || telefoneProprietario || re)   {
-            console.log(`regiaoSelecionada e${regiaoSelecionada}`)
-            console.log(`termoSelecionado e${termoSelecionado}`)
-            console.log(`unidadeSelecionada e${unidadeSelecionada}`)
-            console.log(`nome e${nome}`)
-            console.log(`cep e${cep}`)
-            console.log(`endereco e${endereco}`)
-            console.log(`numero e${numero}`)
-            console.log(`telefone e${telefone}`)
-            console.log(`proprietario e${proprietario}`)
-            console.log(`nascimento e${nascimento}`)
-            console.log(`rg e${rg}`)
-            console.log(`telefoneProprietario e${telefoneProprietario}`)
-            console.log(`re e${re}`)
+        if (!regiaoSelecionada || !termoSelecionado || !unidadeSelecionada ||!nome ||!cep ||!endereco ||!numero ||!telefone ||!proprietario ||!nascimento ||!rg ||!telefoneProprietario || !re)   {
+            console.log(`regiaoSelecionada e ${regiaoSelecionada}`)
+            console.log(`termoSelecionado e ${termoSelecionado}`)
+            console.log(`unidadeSelecionada e ${unidadeSelecionada}`)
+            console.log(`nome e ${nome}`)
+            console.log(`cep e ${cep}`)
+            console.log(`endereco e ${endereco}`)
+            console.log(`numero e ${numero}`)
+            console.log(`telefone e ${telefone}`)
+            console.log(`proprietario e ${proprietario}`)
+            console.log(`nascimento  ${nascimento}`)
+            console.log(`rg e ${rg}`)
+            console.log(`telefoneProprietario e ${telefoneProprietario}`)
+            console.log(`re e ${re}`)
 
 
 
@@ -157,12 +157,15 @@ export default function PVSCadastroComercial(){
             setRegiaoSelecionada("")
             setTermoSelecionado("")
             setUnidadeSelecionada("")
+            setNome("")
             setEndereco("")
             setCep("")
             setNumero("")
             setEndereco("")
             setNumero('')
             setProprietario("")
+            setNascimento("")
+            setTelefoneProprietario("")
             setRG("")
             setTelefone('')
           } else {
@@ -198,13 +201,13 @@ export default function PVSCadastroComercial(){
                             </Select>
                     </Box>
                     <Box style={estilos.container}>
-                        <Text style={estilos.texto}>TERMO DE ACEITAÇÃO</Text>
+                        <Text style={estilos.texto}>TUTOR?</Text>
                             <Select style={estilos.selecao}
                                 marginTop={2}
                                 selectedValue={termoSelecionado}
                                 minWidth={200}
-                                accessibilityLabel="Selecione cadastro ou exclusão"
-                                placeholder="Selecione cadastro ou exclusão"
+                                accessibilityLabel="SE É TUTOR"
+                                placeholder="TUTOR?"
                                 onValueChange={(itemValue) => setTermoSelecionado(itemValue)}
                                 >
                                 {aceita.map((opcao, index) => (
@@ -243,6 +246,7 @@ export default function PVSCadastroComercial(){
                         placeholder="digite cep para preenchimento do endereço "
                         value= {cep}
                         onChangeText={(itemValue)=>setCep(itemValue)}
+                        onBlur={buscarCep}
                         />
                     </Box>
                     <Box style={estilos.container}>          
@@ -252,7 +256,7 @@ export default function PVSCadastroComercial(){
                         placeholder="endereço buscado pelo CEP"
                         value= {endereco}
                         onChangeText={(itemValue)=>setEndereco(itemValue)}
-                        onBlur={buscarCep}
+                        
                         />
                     </Box>
                     <Box style={estilos.container}>          
