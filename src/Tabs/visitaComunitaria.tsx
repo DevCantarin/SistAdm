@@ -12,6 +12,7 @@ import { Usuario } from "../interfaces/Usuario";
 import { CabecalhoPVS } from "../componentes/cabecalhoPVS"
 import { EntradaTexto } from "../componentes/EntradaTexto"
 import { NavigationProps } from "../@types/navigation";
+import { cadastarVisita } from "../servicos/visitaComunitariaServico";
 
 const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
 const regiao = ["CPP-1 (ÁREA DA CIA)", "CPP-2 (CONJ METALÚGICOS)"];
@@ -84,17 +85,11 @@ const estilos = StyleSheet.create({
 
 })
 export default function Comunitaria( navigation : any ){
-    const [regiaoSelecionada, setRegiaoSelecionada] = useState('');
-    const [termoSelecionado, setTermoSelecionado] = useState('');
-    const [unidadeSelecionada, setUnidadeSelecionada] = useState('');
-    const [cep, setCep] = useState('');
-    const [endereco, setEndereco] = useState('');
-    const [numero, setNumero] = useState('');
-    const [complemento, setComplemento] = useState('');
-    const [morador, setMorador] = useState('');
-    const [usuario, setUsuario] = useState({} as Usuario);
-    const [rg, setRG] = useState('');
-    const [telefone, setTelefone] = useState(''); 
+    const [visitado, setVisitado] = useState('');
+    const [encarregado, setEncarregado] = useState('');
+    const [novidades, setNovidade] = useState('');
+    const [usuario, setUsuario] = useState('')
+
 
     const toast = useToast();
 
@@ -123,41 +118,8 @@ export default function Comunitaria( navigation : any ){
         dadosUsuarios();
       }, []);
     
-    async function buscarCep(){
-      if(cep == ""){
-        toast.show({
-          title: 'CEP NÃO DIGITADO',
-          description: 'Digite um CEP valido para consulta',
-          backgroundColor: 'red.500',
-        });
-        return;
-      }
-      try {
-          const resposta : any = await apiViaCep.get(`/${cep}/json/`)
-          setEndereco(resposta.data.logradouro)
-      } catch (error) {
-        console.log("ERRO" + error)
-        toast.show({
-          title: 'CEP invalido',
-          description: 'Digite o cep sem "-" ou "." apenas numeros',
-          backgroundColor: 'red.500',
-        });
-        setCep("")
-        return;
-      }
-    }
-    
     async function cadastrar() {
-        if (isNaN(parseFloat(numero))) {
-          toast.show({
-            title: 'Erro ao agendar consulta',
-            description: 'A número da residência deve ser um número válido',
-            backgroundColor: 'red.500',
-          });
-          return;
-        }
-    
-        if (!regiaoSelecionada || !termoSelecionado || !unidadeSelecionada || !endereco || !numero || !complemento || !morador || !rg || !telefone ) {
+        if (!visitado || !novidades) {
           toast.show({
             title: 'Erro ao agendar consulta',
             description: 'Preencha todos os campos',
@@ -167,21 +129,14 @@ export default function Comunitaria( navigation : any ){
         }
     
         try {
-          const resultado = await cadastrarResidencia(regiaoSelecionada, termoSelecionado, unidadeSelecionada, endereco, numero, complemento, morador, rg, re, telefone);
+          const resultado = await cadastarVisita(visitado, re, novidades);
           if (resultado) {
             toast.show({
               title: 'CADASTRO REALIZADO',
               backgroundColor: 'green.500',
             });
-            setRegiaoSelecionada("")
-            setTermoSelecionado("")
-            setUnidadeSelecionada("")
-            setEndereco("")
-            setNumero("")
-            setComplemento('')
-            setMorador("")
-            setRG("")
-            setTelefone('')
+            setVisitado("")
+            setNovidade("")
 
             navigation.goBack();
           } else {
@@ -203,14 +158,14 @@ export default function Comunitaria( navigation : any ){
             <View>
                 <CabecalhoPVS/>
                     <Box style={estilos.container}>
-                        <Text style={estilos.texto}>RONDADO</Text>
+                        <Text style={estilos.texto}>VISITADO</Text>
                             <Select style={estilos.selecao}
                                 marginTop={2 }
-                                selectedValue={regiaoSelecionada}
+                                selectedValue={visitado}
                                 minWidth={200}
                                 accessibilityLabel="Selecione cadastro ou exclusão"
                                 placeholder="Selecione a REGIÃO"
-                                onValueChange={(itemValue) => setRegiaoSelecionada(itemValue)}
+                                onValueChange={(itemValue) => setVisitado(itemValue)}
                                 >
                                 {listaRuas.map((opcao, index) => (
                                     <Select.Item key={index} label={opcao.nome} value={opcao.nome} />
@@ -219,22 +174,21 @@ export default function Comunitaria( navigation : any ){
                     </Box>
                     <Box style={estilos.container}>          
                         <EntradaTexto
-                        estiloTexto={estilos.texto}
-                        label="NOVIDADES"
-                        placeholder="DIGITE AS NOVIDADES CONSTATADAS"
-                        value = {cep}
-                        onChangeText={setCep}
-                        onBlur = {buscarCep}
+                            estiloTexto={estilos.texto}
+                            label="NOVIDADES"
+                            placeholder="DIGITE AS NOVIDADES CONSTATADAS"
+                            value = {novidades}
+                            onChangeText={setNovidade}
 
                         />
                     </Box>
                     <Box style={estilos.container}>
                         <EntradaTexto
-                        estiloTexto={estilos.texto}
-                        label="RE do Cadastrador"
-                        placeholder=""
-                        value= {re}
-                        onChangeText= {setTelefone}
+                            estiloTexto={estilos.texto}
+                            label="RE do Cadastrador"
+                            placeholder=""
+                            value= {re}
+                            
                     /> 
                     </Box>
                 
