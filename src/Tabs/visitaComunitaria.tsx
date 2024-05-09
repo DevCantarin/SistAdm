@@ -9,10 +9,11 @@ import { Botao } from "../componentes/Botao";
 import { cadastrarResidencia } from "../servicos/PvsCadastramentoResisdencialServico";
 import { pegarDadosUsuarios } from "../servicos/UsuarioServico";
 import { Usuario } from "../interfaces/Usuario";
-import { CabecalhoPVS } from "../componentes/cabecalhoPVS"
+
 import { EntradaTexto } from "../componentes/EntradaTexto"
 import { NavigationProps } from "../@types/navigation";
 import { cadastarVisita } from "../servicos/visitaComunitariaServico";
+import { Titulo } from "../componentes/Titulo";
 
 const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
 const regiao = ["CPP-1 (ÁREA DA CIA)", "CPP-2 (CONJ METALÚGICOS)"];
@@ -156,7 +157,7 @@ export default function Comunitaria( navigation : any ){
         <ScrollView>
 
             <View>
-                <CabecalhoPVS/>
+                    <Titulo> SistADN</Titulo>
                     <Box style={estilos.container}>
                         <Text style={estilos.texto}>VISITADO</Text>
                             <Select style={estilos.selecao}

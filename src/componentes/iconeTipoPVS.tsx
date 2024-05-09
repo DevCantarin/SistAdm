@@ -7,7 +7,7 @@ import { Image, Text, StyleSheet } from "react-native";
 export const iconeTipoPVS = [
     {
         nome: "Residencial",
-        imagem: require('../../assets/recidencial.png')
+        imagem: require('../../assets/residencial.png')
     },
 
     {

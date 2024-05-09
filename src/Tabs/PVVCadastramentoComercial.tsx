@@ -6,10 +6,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import apiViaCep from "../servicos/apiViaCep";
 import { pegarDadosUsuarios } from "../servicos/UsuarioServico";
-import { CabecalhoPVS } from "../componentes/cabecalhoPVS"
+
 import { EntradaTexto } from "../componentes/EntradaTexto"
 import { Botao } from "../componentes/Botao";
 import { cadastrarComercial } from "../servicos/PvsCadastramentoComercialServico";
+import { Titulo } from "../componentes/Titulo";
 
 
 const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
@@ -184,7 +185,7 @@ export default function PVSCadastroComercial(){
         <ScrollView>
 
             <View>
-                <CabecalhoPVS/>
+                <Titulo> SistADN</Titulo>
                 <Box style={estilos.container}>
                         <Text style={estilos.texto}>REGIÃO</Text>
                             <Select style={estilos.selecao}

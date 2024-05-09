@@ -3,7 +3,7 @@ import { Box, ScrollView, Select } from "native-base"
 
 
 import { NavigationProps } from '../@types/navigation';
-import { CabecalhoPVS } from "../componentes/cabecalhoPVS";
+import { Titulo } from "../componentes/Titulo";
 
 
 const visitas =[
@@ -75,7 +75,7 @@ export default function PVSVisita({ navigation }: NavigationProps<'PVS'>){
         <ScrollView>
 
             <View>
-                <CabecalhoPVS/>
+              <Titulo> SistADN</Titulo>
                 <View style = {estilos.container}>
                 {visitas.map((fig, index) => (
           <TouchableOpacity key={index} onPress={() => navigation.navigate(fig.nome)}>

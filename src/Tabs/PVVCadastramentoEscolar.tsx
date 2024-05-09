@@ -6,9 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { EntradaTexto } from "../componentes/EntradaTexto"
 import { Botao } from "../componentes/Botao";
-import { CabecalhoPVS } from "../componentes/cabecalhoPVS"
 import { pegarDadosUsuarios } from "../servicos/UsuarioServico";
 import apiViaCep from "../servicos/apiViaCep";
+import { Titulo } from "../componentes/Titulo";
 
 
 
@@ -116,7 +116,7 @@ export default function PVSCadastroEscolar(){
         <ScrollView>
 
             <View>
-                <CabecalhoPVS/>
+            <Titulo> SistADN</Titulo>
                 <Box style={estilos.container}>
                         <Text style={estilos.texto}>REGIÃO</Text>
                             <Select style={estilos.selecao}

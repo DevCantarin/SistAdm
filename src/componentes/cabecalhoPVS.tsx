@@ -10,10 +10,10 @@ const estilos = StyleSheet.create({
 }
 )
 
-export function CabecalhoPVS() {
-  return (
-    <>
-      <Image style={estilos.cabecalho} alt="logo da Vizinhança Solidária" source={require("../../assets/logopmesp.png")} />
-    </>
-  );
-}
+// export function CabecalhoPVS() {
+//   return (
+//     <>
+//       <Image style={estilos.cabecalho} alt="logo da Vizinhança Solidária" source={require("../../assets/logopmesp.png")} />
+//     </>
+//   );
+// }
