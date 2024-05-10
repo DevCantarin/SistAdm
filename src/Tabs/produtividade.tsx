@@ -17,9 +17,11 @@ import { format } from 'date-fns';
 import { cancelarFolgas } from '../servicos/FolgasServico';
 import { pegaVisitaPorRe } from '../servicos/visitaComunitariaServico';
 import { Visita } from '../interfaces/Visita';
+import { Text } from 'react-native';
 
 export default function Produtividade({ navigation }: NavigationProps<'Principal'>) {
-  const [mikeId, setMikeId] = useState('');
+  const [mikeId, setMikeId] = useState('')
+  const [visitasUsuario, setVisitasUsuario] = useState<Visita[]>()
   const [visitasAgendadas, setVisitasAgendadas] = useState<Visita[]>([]);
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
   const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([]);
@@ -48,10 +50,10 @@ export default function Produtividade({ navigation }: NavigationProps<'Principal
     React.useCallback(() => {
       async function visitaComunitaria() {
         const resultado = await pegaVisitaPorRe(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
-        console.log(resultado)
+        console.log(`o resultado é ${resultado}`)
         if (resultado) {
           setVisitasAgendadas(resultado);
-          console.log(`Visitas Agendadas é ${JSON.stringify(visitasAgendadas.length)}`)
+          console.log(`Visitas Agendadas é ${JSON.stringify(visitasAgendadas)}`)
           console.log(``)
         }
       }
@@ -64,32 +66,23 @@ export default function Produtividade({ navigation }: NavigationProps<'Principal
   return (
     <ScrollView p="5">
       <Titulo color="blue.500">Produtividade</Titulo>
-      {/* {dadosEscalas.length > 0 &&
-        dadosEscalas.map((escala) => {
-          const dataEscala = new Date(escala.data);
-
-          if (dataEscala > new Date()) {
-            return (
-              <CardEscala key={escala.id} nome={`${escala.nome} ${escala.funcao}`} 
-               data={`${format(dataEscala, 'dd/MM/yyyy')}   ${escala.inicio} - ${escala.termino}`} />
-            );
-          }
-
-          return null;
-        })} */}
-
+      <Text>{`Você fez ${visitasAgendadas.length} Visitas comunitárias`}</Text>
+  
       <Divider mt={5} />
-
+  
       <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
         Visitas Realizadas
       </Titulo>
       {visitasAgendadas.length > 0 &&
-        visitasAgendadas.map((visita) => {
-              <CardEscala key={visita.id} nome={`${visita.visitado} ${visita.updatedAt}`} 
-               />
-        })}
-
-
+        visitasAgendadas.map((visita) => (
+          <CardEscala 
+            key={visita.id} 
+            nome={`${visita.visitado}`} 
+            data= {`${format(new Date(visita.updatedAt), 'dd/MM/yyyy HH:mm:ss')}`}
+          />
+        ))}
     </ScrollView>
-);
+  );
+  
+  
 }
