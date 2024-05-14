@@ -4,6 +4,8 @@ import { Box, ScrollView, Select } from "native-base"
 
 import { NavigationProps } from '../@types/navigation';
 import { iconeOpcoesPVS} from "../componentes/iconeOpcoesPVS";
+import { Titulo } from "../componentes/Titulo";
+import { CabecalhoPVS } from "../componentes/cabecalhoPVS";
 
 
 const estilos = StyleSheet.create({
@@ -16,7 +18,7 @@ const estilos = StyleSheet.create({
     },
   
     container: {
-      flex: 1,
+      // flex: 1,
       alignItems: 'center',
       justifyContent: "space-evenly",
       flexDirection: 'row',
@@ -46,7 +48,7 @@ const estilos = StyleSheet.create({
   
     },
     titulo:{
-      margin: 10,
+      marginBottom: 10,
       
     }
   
@@ -61,20 +63,28 @@ export default function PVS({ navigation }: NavigationProps<'PVS'>){
 
 
     return(
-        <ScrollView p="5" contentContainerStyle={estilos.principal}>
-            <View style = {estilos.container}>
-                {iconeOpcoesPVS.map((fig, index) => (
-          <TouchableOpacity key={index} onPress={() => navigation.navigate(fig.nome)}>
-            <View style ={estilos.container} > 
-              <View>
-                <Text style={estilos.nomeIcone}>{fig.nome}</Text>
-                <Image style={estilos.icone} source={fig.imagem} />
-              </View>
-            </View>   
-          </TouchableOpacity>
-        ))}
-            </View>  
+        <>
+          <View>
+            <Box style = {estilos.titulo}>
+                <Titulo>PVS</Titulo>
+            </Box>
+          </View>
+          {/* <CabecalhoPVS/> */}
+          <ScrollView p="5" contentContainerStyle={estilos.principal}>
+              <View style = {estilos.container}>
+                  {iconeOpcoesPVS.map((fig, index) => (
+                    <TouchableOpacity key={index} onPress={() => navigation.navigate(fig.nome)}>
+              <View style ={estilos.container} > 
+                <View>
+                  <Text style={estilos.nomeIcone}>{fig.nome}</Text>
+                  <Image style={estilos.icone} source={fig.imagem} />
+                </View>
+              </View>   
+            </TouchableOpacity>
+          ))}
+              </View>  
 
-        </ScrollView>
+          </ScrollView>
+        </>
     )
 }

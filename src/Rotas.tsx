@@ -18,6 +18,7 @@ import PVSVisita from "./Tabs/PVSVisita";
 import ESCALA from "./Tabs/ESCALA";
 import Comunitaria from "./Tabs/visitaComunitaria";
 import Produtividade from "./Tabs/produtividade";
+import Mapa from "./Tabs/Mapa";
 
 export default function Rotas(){
   return(
@@ -57,7 +58,9 @@ export default function Rotas(){
       name="Comunitaria" component={Comunitaria as React.FC} options={{ headerShown: false }}
     /><Tab.Screen 
     name="Produtividade" component={Produtividade as React.FC} options={{ headerShown: false }}
-  />
+  /><Tab.Screen 
+  name="Mapa" component={Mapa as React.FC} options={{ headerShown: false }}
+/>
       </Tab.Navigator>
     </NavigationContainer>
   )

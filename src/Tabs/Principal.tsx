@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationProps } from '../@types/navigation';
 import { useFocusEffect } from '@react-navigation/native';
-import { ScrollView, View,  useToast } from 'native-base';
+import { Box, ScrollView, View, useToast } from 'native-base';
 import { useIsFocused } from '@react-navigation/native';
-import {Image, Text} from 'react-native'
+import { Image, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 
 import { Titulo } from '../componentes/Titulo';
@@ -17,61 +17,70 @@ import { pegarEscalasUsuario } from '../servicos/escalaServico';
 import { cancelarFolgas } from '../servicos/FolgasServico';
 import { icone } from '../componentes/icone';
 
-
-
 const estilos = StyleSheet.create({
-  principal:{
+  principal: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-around',
-    // backgroundColor: 'blue'
-
+    justifyContent: 'center',
   },
 
   container: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: '#fff',
-    borderRadius: 10
-
+    borderRadius: 10,
+    borderColor: 'black',
   },
 
-  elemento:{
-    margin: 10
-
+  div: {
+    // flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderColor: 'black',
   },
 
-  nomeIcone:{
+  elemento: {
+    margin: 10,
+    borderColor: 'black',
+  },
+
+  nomeIcone: {
     textAlign: 'center',
-    color:'black',
+    color: 'black',
     fontSize: 10,
-    margin:10
+    margin: 10,
   },
-  icone:{
+
+  icone: {
+    alignItems: 'center',
+  },
+
+  iconeImagem: {
     width: 100,
     height: 100,
     margin: 5,
-    alignItems: 'center'
-
+    alignItems: 'center',
+    borderColor: 'black',
   },
-  titulo:{
+
+  titulo: {
     margin: 10,
-    
-  }
-
-  
-
-})
+  },
+});
 
 export default function Principal({ navigation }: NavigationProps<'Principal'>) {
   const [mikeId, setMikeId] = useState('');
   const [folgasAgendadas, setFolgasAgendadas] = useState<Folga[]>([]);
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
   const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([]);
-  const [forceUpdate, setForceUpdate] = useState(0); 
+  const [forceUpdate, setForceUpdate] = useState(0);
   const toast = useToast();
   const isFocused = useIsFocused();
 
@@ -90,7 +99,7 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
       }
     }
     fetchData();
-  }, [isFocused, forceUpdate]); 
+  }, [isFocused, forceUpdate]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -119,18 +128,18 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
   const handleCancelarFolga = async (folga: Folga) => {
     try {
       const resultado = await cancelarFolgas(folga.id);
-  
+
       if (resultado) {
         console.log('Folga cancelada com sucesso');
-  
+
         // Log antes da atualização
         console.log('folgasAgendadas antes da atualização:', folgasAgendadas);
-  
+
         setFolgasAgendadas((prevFolgas) => prevFolgas.filter((f) => f.id !== folga.id));
-  
+
         // Log depois da atualização
         console.log('folgasAgendadas após da atualização:', folgasAgendadas);
-  
+
         setForceUpdate((prev) => prev + 1); // Incrementa 'forceUpdate' para forçar a atualização
       } else {
         console.log('Erro ao cancelar folga!!!');
@@ -139,20 +148,21 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
       console.error('Erro ao cancelar folga:', error);
     }
   };
-   
 
   return (
     <ScrollView p="5" contentContainerStyle={estilos.principal}>
       <Titulo style={estilos.titulo}>SistADM</Titulo>
       <View style={estilos.container}>
-        {icone.map((fig, index) => (
-          <TouchableOpacity key={index} onPress={() => navigation.navigate(fig.nome)}>
-            <View> 
-              <Text style={estilos.nomeIcone}>{fig.nome}</Text>
-              <Image style={estilos.icone} source={fig.imagem} />
-            </View>
-          </TouchableOpacity>
-        ))}
+        <Box style={estilos.div}>
+          {icone.map((fig, index) => (
+            <TouchableOpacity key={index} onPress={() => navigation.navigate(fig.nome)}>
+              <View style={estilos.icone}>
+                <Text style={estilos.nomeIcone}>{fig.nome}</Text>
+                <Image style={estilos.iconeImagem} source={fig.imagem} />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </Box>
       </View>
     </ScrollView>
   );

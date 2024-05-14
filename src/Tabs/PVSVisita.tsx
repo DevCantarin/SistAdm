@@ -14,6 +14,10 @@ const visitas =[
   {
     nome: "Solidaria",
     imagem: require('../../assets/visitaSolidaria.png')
+  },
+  {
+    nome: "Mapa",
+    imagem: require('../../assets/mapa.png')
   }
 ]
 
