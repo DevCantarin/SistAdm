@@ -19,6 +19,10 @@ import ESCALA from "./Tabs/ESCALA";
 import Comunitaria from "./Tabs/visitaComunitaria";
 import Produtividade from "./Tabs/produtividade";
 import Mapa from "./Tabs/Mapa";
+import Administrador from "./Tabs/Administrador"
+import Pendencias from "./Tabs/Pendencias";
+import Administrar from "./Tabs/Administrar";
+
 
 export default function Rotas(){
   return(
@@ -60,6 +64,12 @@ export default function Rotas(){
     name="Produtividade" component={Produtividade as React.FC} options={{ headerShown: false }}
   /><Tab.Screen 
   name="Mapa" component={Mapa as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="Administrador" component={Administrador as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="Pendencias" component={Pendencias as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="Administrar" component={Administrar as React.FC} options={{ headerShown: false }}
 />
       </Tab.Navigator>
     </NavigationContainer>

@@ -12,7 +12,8 @@ export function Botao({ children, autoSize = false, color, ...rest }: ButtonProp
   return (
     <Button
       w={autoSize ? 'auto' : '100%'}
-      bg={color || 'blue.800'}
+      bg={children == "Aprovar" ? "green.500":
+          children == "Negar" ? 'red.800': "blue.800"}
       mt={10}
       borderRadius="lg"
       _text={{ color: 'white' }}

@@ -116,7 +116,8 @@ export default function Agendamento({ route, navigation }: any) {
 
     console.log(`folgaMensaisNoMes eh ${ JSON.stringify(folgasMensaisNoMes) }`)
     console.log(`folgasAgendadasDoMes eh ${ JSON.stringify(folgasAgendadasDoMes) }`)
-    if (folgasAgendadasDoMes.length >= 1  && motivoSelecionado === 'FOLGA MENSAL' ) {
+    console.log(`folgasAgendadasDoMes.length: ${folgasAgendadasDoMes.length}`)
+    if (folgasMensaisNoMes.length >= 2  && motivoSelecionado === 'FOLGA MENSAL' ) {
       toast.show({
         title: 'Duplicidade',
         description: 'Você só pode agendar uma folga mensal por mês',

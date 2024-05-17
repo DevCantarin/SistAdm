@@ -131,8 +131,10 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
                 key={folga.id}
                 nome={`${dadosUsuarios?.nome}  ${folga.motivo}`}
                 data={converterDataParaString(folga.data_inicial)}
-                foiAtendido
-                foiAgendado
+                status= {`${folga.aprovacao=="SIM"? "FOLGA APROVADA": folga.aprovacao == "NÃO"? "FOLGA REPROVADA": ""}`}
+                foiAtendido = {folga.aprovacao=="SIM"? true : false}
+                foiNegado = {folga.aprovacao=="NÃO"? true : false}
+                foiPedido={folga.aprovacao == null ? true : false} // Defina a propriedade foiPedido com base na condição
                 onPress={() => handleCancelarFolga(folga)}
                 folga={folga}
               />

@@ -49,6 +49,33 @@ export async function agendarFolgas(data: Date, gradId:string, reId: string, nom
   }
 }
 
+export async function avaliaFolgas(folgaId:string, aprovacaoID:string){
+  const token = await AsyncStorage.getItem('token');
+  console.log('Token:', token);
+
+  if (!token) {
+    console.log('Token não encontrado no armazenamento local.');
+    return null;
+  }
+  try {
+    const resultado = await api.put(`/folgas/id/${folgaId}`, {
+
+      aprovacao: aprovacaoID,
+
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return resultado.data
+  }
+  catch(error){
+    console.log(error);
+    return null;
+  }
+}
+
 export async function cancelarFolgas(folgaId: string) {
   const token = await AsyncStorage.getItem('token');
 

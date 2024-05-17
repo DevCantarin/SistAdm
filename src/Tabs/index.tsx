@@ -10,6 +10,7 @@ import { pegarDadosUsuarios } from "../servicos/UsuarioServico";
 import { Usuario } from "../interfaces/Usuario";
 import { useToast } from "native-base";
 import { useIsFocused } from "@react-navigation/native";
+import Administrador from "./Administrador";
 
 
 const Tab = createBottomTabNavigator()
@@ -94,8 +95,8 @@ export default function Tabs() {
           icon: 'home'
         },
         {
-          name: 'Supervisor',
-          component: Supervisor,
+          name: 'Administrador',
+          component: Administrador,
           icon: 'calendar'
         },
         {

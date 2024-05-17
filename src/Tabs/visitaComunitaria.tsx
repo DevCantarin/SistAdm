@@ -13,6 +13,7 @@ import { Usuario } from "../interfaces/Usuario";
 import { EntradaTexto } from "../componentes/EntradaTexto"
 import { NavigationProps } from "../@types/navigation";
 import { cadastarVisita, pegaTodasVisitas } from "../servicos/visitaComunitariaServico";
+import {pegaTodasAsResidencias} from "../servicos/PvsCadastramentoResisdencialServico"
 import { Titulo } from "../componentes/Titulo";
 import { Visita } from "../interfaces/Visita";
 
@@ -93,7 +94,7 @@ export default function Comunitaria( navigation : any ){
     const [encarregado, setEncarregado] = useState('');
     const [novidades, setNovidade] = useState('');
     const [usuario, setUsuario] = useState('')
-    const [ruas, setRuas] = useState<Visita[]>([])
+    const [ruas, setRuas] = useState<any>([])
 
 
     const toast = useToast();
@@ -130,7 +131,7 @@ export default function Comunitaria( navigation : any ){
             console.log("nao achou mikeId")
             return null} ;
     
-          const resultadoVisitas = await pegaTodasVisitas();
+          const resultadoVisitas = await pegaTodasAsResidencias();
           if (resultadoVisitas) {
             
             setRuas(resultadoVisitas)
@@ -190,8 +191,8 @@ export default function Comunitaria( navigation : any ){
                                 placeholder="Selecione a rua Visitada"
                                 onValueChange={(itemValue) => setVisitado(itemValue)}
                                 >
-                                {ruas.map((opcao, index) => (
-                                    <Select.Item key={index} label={opcao.visitado} value={opcao.visitado} />
+                                {ruas.map((opcao:any, index:any) => (
+                                    <Select.Item key={index} label={opcao.endereco} value={opcao.endereco} />
                                 ))}
                             </Select>
                     </Box>
