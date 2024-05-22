@@ -2,7 +2,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { Button, ScrollView, Modal, View, Text, Pressable, Box, Image } from "native-base";
 import React, { useEffect, useState } from "react";
 import { editarUsuario, pegaTodosUsuarios } from "../servicos/UsuarioServico";
-import { CardEscala } from "../componentes/CardEscala";
 import { Usuario } from "../interfaces/Usuario";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { Folga } from "../interfaces/Folga";
@@ -83,7 +82,12 @@ export default function Administrador({ navigation }: NavigationProps<'Principal
     {
       nome: "Administrar",
       imagem: require('../../assets/adm.png')
-  },
+    },
+    {
+      nome: "Cargos",
+      imagem: require('../../assets/cargos.png')
+    },
+
 
 
     

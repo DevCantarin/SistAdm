@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import Supervisor from "./Supervisor";
 import Principal from "./Principal";
 import Explorar from "./Explorar";
 import Perfil from "./Perfil";

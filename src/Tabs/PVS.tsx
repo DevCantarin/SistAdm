@@ -22,7 +22,7 @@ const estilos = StyleSheet.create({
       alignItems: 'center',
       justifyContent: "space-evenly",
       flexDirection: 'row',
-      // flexWrap: 'wrap',
+      flexWrap: 'wrap',
       backgroundColor: '#fff',
       borderRadius: 10,
       // backgroundColor: 'blue'

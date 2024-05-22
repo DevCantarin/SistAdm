@@ -47,6 +47,7 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
       async function folgaData() {
         const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
         if (resultado) {
+          console.log(`folgas agendadas é ${JSON.stringify(resultado)}`)
           setFolgasAgendadas(resultado);
         }
       }
@@ -94,9 +95,9 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
   return (
     <ScrollView p="5">
       <Titulo color="blue.500">Minhas Escalas</Titulo>
-      <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>
+      {/* <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>
         Agendar nova Folga
-      </Botao>
+      </Botao> */}
 
       <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
         Previsão de Próximas Escalas
@@ -134,7 +135,7 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
                 status= {`${folga.aprovacao=="SIM"? "FOLGA APROVADA": folga.aprovacao == "NÃO"? "FOLGA REPROVADA": ""}`}
                 foiAtendido = {folga.aprovacao=="SIM"? true : false}
                 foiNegado = {folga.aprovacao=="NÃO"? true : false}
-                foiPedido={folga.aprovacao == null ? true : false} // Defina a propriedade foiPedido com base na condição
+                foiPedido={folga.aprovacao == null ? true : false} 
                 onPress={() => handleCancelarFolga(folga)}
                 folga={folga}
               />

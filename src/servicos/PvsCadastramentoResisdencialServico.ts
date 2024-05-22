@@ -53,7 +53,7 @@ export async function cadastrarResidencia(regiao: string, termo: string, opm: st
   }
 }
 
-export async function cancelarFolgas(folgaId: string) {
+export async function pegaResisdenciaPorID(id: string) {
   const token = await AsyncStorage.getItem('token');
 
   if (!token) {
@@ -62,14 +62,44 @@ export async function cancelarFolgas(folgaId: string) {
   }
 
   try {
-    const resultado = await api.delete(`/folgas/id/${folgaId}`, {
+    const resultado = await api.get(`/pvsresidencial/id/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(resultado.data);
+
     return resultado.data;
   } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function atualizaTutorResidencia(residenciaID:string, termoNovo:string){
+  const token = await AsyncStorage.getItem('token');
+  console.log('Token:', token);
+
+  if (!token) {
+    console.log('Token não encontrado no armazenamento local.');
+    return null;
+  }
+  try {
+    const resultado = await api.put(`/folgas/id/${residenciaID}`, {
+
+      termo: termoNovo,
+
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(`o residenciaID novo é ${residenciaID}`)
+    console.log(`o termo novo é ${termoNovo}`)
+    console.log(`Tutor Alterado`)
+    return resultado.data
+
+  }
+  catch(error){
     console.log(error);
     return null;
   }

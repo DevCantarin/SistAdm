@@ -14,5 +14,9 @@ export const iconeOpcoesPVS = [
         nome:"Produtividade",
         imagem: require('../../assets/produtividade.png')
     },
+    {
+        nome: "Cadastrados",
+        imagem: require('../../assets/Cadastrados.png')
+      }
 ]
 

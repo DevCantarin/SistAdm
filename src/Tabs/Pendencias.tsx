@@ -209,7 +209,9 @@ export default function Pendencias({ navigation }: NavigationProps<'Principal'>)
               nome={`${folga?.nome}  ${folga.motivo}`}
               data={converterDataParaString(folga.data_inicial)}
               // foiAtendido
-              foiAgendado
+              foiAtendido = {folga.aprovacao=="SIM"? true : false}
+              foiNegado = {folga.aprovacao=="NÃO"? true : false}
+              foiPedido={folga.aprovacao == null ? true : false} 
               onPress={() => handleAprovaFolga(folga)}
               folga={folga}
             />

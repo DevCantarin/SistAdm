@@ -22,7 +22,9 @@ import Mapa from "./Tabs/Mapa";
 import Administrador from "./Tabs/Administrador"
 import Pendencias from "./Tabs/Pendencias";
 import Administrar from "./Tabs/Administrar";
-
+import Cargos from "./Tabs/Cargos";
+import Cadastrados from "./Tabs/Cadastrados";
+import AtualizarResidencia from "./Tabs/AtualizarResidencia";
 
 export default function Rotas(){
   return(
@@ -70,6 +72,12 @@ export default function Rotas(){
   name="Pendencias" component={Pendencias as React.FC} options={{ headerShown: false }}
 /><Tab.Screen 
   name="Administrar" component={Administrar as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="Cargos" component={Cargos as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="Cadastrados" component={Cadastrados as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="AtualizarResidencia" component={AtualizarResidencia as React.FC} options={{ headerShown: false }}
 />
       </Tab.Navigator>
     </NavigationContainer>

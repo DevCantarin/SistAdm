@@ -6,8 +6,8 @@ import { CardEscala } from "../componentes/CardEscala";
 import { Usuario } from "../interfaces/Usuario";
 import { TouchableOpacity } from "react-native";
 
-export default function Supervisor() {
-  const funcoes = ["ADMINISTRADOR","COMANDANTE", "ESCALANTE", "PJMD", "ADM", "RP", "CGP-1", "CGP-2", "CGP-3", "CGP-4",];
+export default function Cargos() {
+  const funcoes = ["ADMINISTRADOR","COMANDANTE", "ESCALANTE", "ADM", "RP", "CGP-1", "CGP-2", "CGP-3", "CGP-4",];
 
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);

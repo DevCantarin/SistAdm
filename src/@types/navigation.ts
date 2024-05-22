@@ -13,6 +13,7 @@ export type ListaTelas = {
   Agendamento: undefined;
   PVS:undefined
   ESCALA:undefined
+  AtualizarResidencia: undefined
   
 }
 

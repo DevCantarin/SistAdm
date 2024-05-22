@@ -97,7 +97,7 @@ export default function Login({ navigation } : NavigationProps<'Login'>) {
       </Box>
       <Botao onPress={login}>Entrar</Botao>
 
-      <Link href='https://www.alura.com.br' mt={2}>
+      <Link href='' mt={2}>
         Esqueceu sua senha?
       </Link>
 

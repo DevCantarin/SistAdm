@@ -10,6 +10,8 @@ import { pegaTodoEfetivo } from "./servicos/EfetivoServico";
 import { Botao } from "./componentes/Botao";
 import { Titulo } from "./componentes/Titulo";
 import { CardEscala } from "./componentes/CardEscala";
+import { pegarTodasAsFolgas } from "./servicos/FolgasServico";
+import { Folga } from "./interfaces/Folga";
 
 export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
@@ -20,6 +22,8 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
   const [efetivo2Pel, setEfetivo2Pel] = useState([] as Efetivo[]);
   const [efetivo3Pel, setEfetivo3Pel] = useState([] as Efetivo[]);
   const [efetivo4Pel, setEfetivo4Pel] = useState([] as Efetivo[]);
+  const [folgasDoPelotao, setFolgasDoPelotao] = useState([] as Folga[])
+  const [rePelotao, setRePelotao] = useState("")
 
   useEffect(() => {
     async function fetchData() {
@@ -35,6 +39,7 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
         // Verificar a função do usuário e definir a função correspondente
         if (resultado.funcao === "CGP-1") {
           setFuncao(efetivo1Pel);
+          const folga = efetivo1Pel.filter((mike)=> mike.re)
         } 
         if(resultado.funcao === "CGP-2") {
           setFuncao(efetivo2Pel);
@@ -48,7 +53,7 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
       }
     }
     fetchData();
-  }, [efetivo1Pel, efetivo2Pel, efetivo3Pel, efetivo4Pel]); // Adicionado efetivo1Pel e efetivo2Pel como dependências
+  }, [efetivo1Pel, efetivo2Pel, efetivo3Pel, efetivo4Pel]); 
 
   useEffect(()=> {
     async function fetchData() {
@@ -75,13 +80,24 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
     fetchData();
   }, []); 
 
+
+  useEffect(() => {
+    async function fetchData() {
+      const resultado = await pegarTodasAsFolgas();
+      if (resultado) {
+        setFolgasDoPelotao(resultado)
+      }
+    }
+    fetchData();
+  }, []);
+
   return(
     <ScrollView>
-      <Botao>EFETIVO SOB SEU COMANDO</Botao>
+      <Botao>EFETIVO SOB </Botao>
       <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>{dadosUsuarios.funcao}</Titulo>
       {funcao.map((mike, index) => (
         <Box key={index} >
-        <CardEscala nome={`${mike.nome} ${mike.equipe}`}/>
+        <CardEscala nome={`${mike.nome} ${mike.re} ${mike.equipe}`}/>
         </Box>
       ))}
     </ScrollView>

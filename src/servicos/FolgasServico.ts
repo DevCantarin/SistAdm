@@ -9,7 +9,6 @@ export async function pegarTodasAsFolgas(){
         Authorization: `Bearer ${token}`
       }
     })
-    console.log(folgas.data)
     return folgas.data
   }
   catch(error){

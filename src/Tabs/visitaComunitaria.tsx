@@ -16,6 +16,7 @@ import { cadastarVisita, pegaTodasVisitas } from "../servicos/visitaComunitariaS
 import {pegaTodasAsResidencias} from "../servicos/PvsCadastramentoResisdencialServico"
 import { Titulo } from "../componentes/Titulo";
 import { Visita } from "../interfaces/Visita";
+import { Residencia } from "../interfaces/Residencia";
 
 const cadastoOpçcoes = ["NOVO CADASTRO", "EXCLUSÃO DE CADASTRO"];
 const regiao = ["CPP-1 (ÁREA DA CIA)", "CPP-2 (CONJ METALÚGICOS)"];
@@ -127,20 +128,20 @@ export default function Comunitaria( navigation : any ){
       useEffect(() => {
         async function visitasComunitarias() {
           const mikeId = await AsyncStorage.getItem('mikeId');
-          if (!mikeId) { 
-            console.log("nao achou mikeId")
-            return null} ;
-    
-          const resultadoVisitas = await pegaTodasAsResidencias();
+          if (!mikeId) {
+            console.log("Não achou mikeId");
+            return null;
+          }
+      
+          const resultadoVisitas: Residencia[] = await pegaTodasAsResidencias();
           if (resultadoVisitas) {
-            
-            setRuas(resultadoVisitas)
-            console.log(`visitas é ${resultadoVisitas}`)
+            setRuas(resultadoVisitas.filter((v) => v.termo === "SIM"));
           }
         }
-    
+      
         visitasComunitarias();
       }, []);
+      
     
     async function cadastrar() {
         if (!visitado || !novidades) {
@@ -174,7 +175,7 @@ export default function Comunitaria( navigation : any ){
           console.log(error);
         }
       }
-    
+
 
     return(
         <ScrollView>
