@@ -27,6 +27,8 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
   const [folga, setFolga] = useState([] as Folga[]);
   const [folgasFiltradas, setFolgasFiltradas] = useState([] as Folga[]);
   const [listaREs, setListaREs] = useState([] as string[]);
+  const [mike, setMike] = useState("");
+  const [lista, setLista] = useState<Folga[]>([]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -98,6 +100,7 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
       setEfetivo3Pel(efetivoFiltrado3);
 
       const efetivoFiltrado4: Efetivo[] = resultado.filter((mike: Efetivo) => mike.equipe === "4º PEL");
+      console.log(`efetivo 4 pel é: ${efetivoFiltrado4}`)
       setEfetivo4Pel(efetivoFiltrado4);
     }
     fetchData();
@@ -111,17 +114,36 @@ export default function Explorar({ navigation }: NavigationProps<'Explorar'>){
     setFolgasFiltradas(folgasFiltradas);
   }, [folga, listaREs]);
 
+
+    useEffect(() => {
+    // Atualiza o estado lista sempre que mike ou folgas mudarem
+    if (mike) {
+      setLista(folgasFiltradas.filter(folga => folga.re.includes(mike)));
+    } else {
+      setLista(folgasFiltradas);
+    }
+  }, [mike, folgasFiltradas]);
+
   return (
     <ScrollView>
       <Botao>EFETIVO SOB SEU COMANDO</Botao>
       <Titulo color="blue.500" alignSelf="center" paddingBottom={1}>{dadosUsuarios.funcao}</Titulo>
       <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>FOLGAS DO SEU PELOTÃO</Titulo>
-      {folgasFiltradas.length === 0 ? (
+      <Box>          
+        <EntradaTexto
+          label="Pesquisa por RE"
+          placeholder="Digite o RE do Mike"
+          value={mike}
+          onChangeText={(itemValue)=>setMike(itemValue)}
+        />
+      </Box>
+      {lista.length === 0 ? (
         <Box alignSelf="center" padding={5}>
           <Titulo color="red.500">AGUARDE O CARREGAMENTO</Titulo>
         </Box>
+        
       ) : (
-        folgasFiltradas.map((folga, index) => (
+        lista.map((folga, index) => (
           <Box key={index}>
             <CardEscala
               key={folga.id}

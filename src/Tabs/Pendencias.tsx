@@ -147,7 +147,7 @@ export default function Pendencias({ navigation }: NavigationProps<'Principal'>)
           const resultado = await pegarTodasAsFolgas();
           // console.log(`folgas são ${JSON.stringify(resultado)}`);
           
-          const folgasPendentes = resultado.filter((folga:Folga) => folga.aprovacao == null);
+          const folgasPendentes = resultado.filter((folga:Folga) => folga.aprovacao == null || folga.aprovacao == "");
           console.log(`folgas pendentes é ${JSON.stringify(folgasPendentes)}`)
           setFolgas(folgasPendentes);
           
@@ -206,12 +206,13 @@ export default function Pendencias({ navigation }: NavigationProps<'Principal'>)
           return (
             <CardEscala
               key={folga.id}
-              nome={`${folga?.nome}  ${folga.motivo}`}
+              nome={`${folga?.grad} ${folga?.re} ${folga?.nome}`}
               data={converterDataParaString(folga.data_inicial)}
+              status={folga.motivo}
               // foiAtendido
               foiAtendido = {folga.aprovacao=="SIM"? true : false}
               foiNegado = {folga.aprovacao=="NÃO"? true : false}
-              foiPedido={folga.aprovacao == null ? true : false} 
+              foiAgendado={folga.aprovacao == null || folga.aprovacao == "" ?  true : false} 
               onPress={() => handleAprovaFolga(folga)}
               folga={folga}
             />

@@ -135,7 +135,7 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
                 status= {`${folga.aprovacao=="SIM"? "FOLGA APROVADA": folga.aprovacao == "NÃO"? "FOLGA REPROVADA": ""}`}
                 foiAtendido = {folga.aprovacao=="SIM"? true : false}
                 foiNegado = {folga.aprovacao=="NÃO"? true : false}
-                foiPedido={folga.aprovacao == null ? true : false} 
+                foiPedido={folga.aprovacao == null || folga.aprovacao == "" ? true : false} 
                 onPress={() => handleCancelarFolga(folga)}
                 folga={folga}
               />
