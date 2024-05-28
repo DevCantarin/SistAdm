@@ -87,8 +87,6 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
   useEffect(() => {
     async function fetchData() {
       const storedMikeId = await AsyncStorage.getItem('mikeId');
-
-      console.log(`storedMikeId ${storedMikeId}`);
       if (!storedMikeId) return null;
 
       setMikeId(storedMikeId);
@@ -131,15 +129,7 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
 
       if (resultado) {
         console.log('Folga cancelada com sucesso');
-
-        // Log antes da atualização
-        console.log('folgasAgendadas antes da atualização:', folgasAgendadas);
-
         setFolgasAgendadas((prevFolgas) => prevFolgas.filter((f) => f.id !== folga.id));
-
-        // Log depois da atualização
-        console.log('folgasAgendadas após da atualização:', folgasAgendadas);
-
         setForceUpdate((prev) => prev + 1); // Incrementa 'forceUpdate' para forçar a atualização
       } else {
         console.log('Erro ao cancelar folga!!!');

@@ -43,7 +43,6 @@ export default function Tabs() {
   
       const resultado = await pegarDadosUsuarios(storedMikeId);
       if (resultado) {
-        console.log(`dados do usuario ${JSON.stringify(resultado)}`)
         setDadosUsuarios(resultado);
       }
     }

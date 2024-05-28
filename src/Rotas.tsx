@@ -24,7 +24,11 @@ import Pendencias from "./Tabs/Pendencias";
 import Administrar from "./Tabs/Administrar";
 import Cargos from "./Tabs/Cargos";
 import Cadastrados from "./Tabs/Cadastrados";
-import AtualizarResidencia from "./Tabs/AtualizarResidencia";
+import AtualizarResidencia from "./Tabs/AtualizarResidencia"
+import DISPENSAS from "./Tabs/Dispensas";
+import FERIAS from "./Tabs/Ferias";
+
+
 
 export default function Rotas(){
   return(
@@ -78,6 +82,10 @@ export default function Rotas(){
   name="Cadastrados" component={Cadastrados as React.FC} options={{ headerShown: false }}
 /><Tab.Screen 
   name="AtualizarResidencia" component={AtualizarResidencia as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="DISPENSAS" component={DISPENSAS as React.FC} options={{ headerShown: false }}
+/><Tab.Screen 
+  name="FERIAS" component={FERIAS as React.FC} options={{ headerShown: false }}
 />
       </Tab.Navigator>
     </NavigationContainer>
