@@ -4,7 +4,7 @@ import { Botao } from '../componentes/Botao';
 import { CardEscala } from '../componentes/CardEscala';
 import { Titulo } from '../componentes/Titulo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { pegarDadosUsuarios, pegarFolgasUsuario } from '../servicos/UsuarioServico';
+import { pegarDadosUsuarios, pegarFeriasUsuario } from '../servicos/UsuarioServico';
 import { NavigationProps } from '../@types/navigation';
 import { useIsFocused } from '@react-navigation/native';
 import { converterDataParaString } from '../utils/conversoes';
@@ -15,10 +15,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { pegarEscalasUsuario } from '../servicos/escalaServico';
 import { format } from 'date-fns';
 import { cancelarFolgas } from '../servicos/FolgasServico';
+import { Ferias } from '../interfaces/Ferias';
 
 export default function FERIAS({ navigation }: NavigationProps<'Principal'>) {
   const [mikeId, setMikeId] = useState('');
-  const [folgasAgendadas, setFolgasAgendadas] = useState<Folga[]>([]);
+  const [ferias, setFerias] = useState<Ferias[]>([]);
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
   const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([]);
   const [forceUpdate, setForceUpdate] = useState(0); 
@@ -45,10 +46,10 @@ export default function FERIAS({ navigation }: NavigationProps<'Principal'>) {
   useFocusEffect(
     React.useCallback(() => {
       async function folgaData() {
-        const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
+        const resultado = await pegarFeriasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
         if (resultado) {
-          console.log(`folgas agendadas é ${JSON.stringify(resultado)}`)
-          setFolgasAgendadas(resultado);
+          console.log(`ferias agendadas é ${JSON.stringify(resultado)}`)
+          setFerias(resultado);
         }
       }
       folgaData();
@@ -75,12 +76,12 @@ export default function FERIAS({ navigation }: NavigationProps<'Principal'>) {
         console.log('Folga cancelada com sucesso');
   
         // Log antes da atualização
-        console.log('folgasAgendadas antes da atualização:', folgasAgendadas);
+        console.log('ferias antes da atualização:', ferias);
   
-        setFolgasAgendadas((prevFolgas) => prevFolgas.filter((f) => f.id !== folga.id));
+        setFerias((prevFolgas) => prevFolgas.filter((f) => f.id !== folga.id));
   
         // Log depois da atualização
-        console.log('folgasAgendadas após da atualização:', folgasAgendadas);
+        console.log('ferias após da atualização:', ferias);
   
         setForceUpdate((prev) => prev + 1); // Incrementa 'forceUpdate' para forçar a atualização
       } else {
@@ -94,56 +95,27 @@ export default function FERIAS({ navigation }: NavigationProps<'Principal'>) {
 
   return (
     <ScrollView p="5">
-      <Titulo color="blue.500">Minhas Escalas</Titulo>
+      <Titulo color="blue.500">Minhas Ferias</Titulo>
       {/* <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>
         Agendar nova Folga
       </Botao> */}
-
-      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
-        Previsão de Próximas Escalas
-      </Titulo>
-
-      {dadosEscalas.length > 0 &&
-        dadosEscalas.map((escala) => {
-          const dataEscala = new Date(escala.data);
-
-          if (dataEscala > new Date()) {
-            return (
-              <CardEscala key={escala.id} nome={`${escala.nome} ${escala.funcao}`} 
-               data={`${format(dataEscala, 'dd/MM/yyyy')}   ${escala.inicio} - ${escala.termino}`} />
-            );
-          }
-
-          return null;
-        })}
-
-      <Divider mt={5} />
-
-      <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
-        Folgas Agendadas
-      </Titulo>
-      {folgasAgendadas.length > 0 &&
-        folgasAgendadas.map((folga) => {
-          const dataFolga = new Date(folga.data_inicial);
-
-          if (dataFolga.setDate(dataFolga.getDate())  >= new Date().setDate(new Date().getDate())) {
-            return (
-              <CardEscala
-                key={folga.id}
-                nome={`${dadosUsuarios?.nome}  ${folga.motivo}`}
-                data={converterDataParaString(folga.data_inicial)}
-                status= {`${folga.aprovacao=="SIM"? "FOLGA APROVADA": folga.aprovacao == "NÃO"? "FOLGA REPROVADA": ""}`}
-                foiAtendido = {folga.aprovacao=="SIM"? true : false}
-                foiNegado = {folga.aprovacao=="NÃO"? true : false}
-                foiPedido={folga.aprovacao == null || folga.aprovacao == "" ? true : false} 
-                onPress={() => handleCancelarFolga(folga)}
-                folga={folga}
-              />
-            );
-          }
-
-          return null;
-        })}
+  
+      {ferias.length > 0 && ferias.map((feriasItem) => (
+        <React.Fragment key={feriasItem.id}>
+          <CardEscala
+            nome={`${dadosUsuarios?.nome}  ${feriasItem.quantidade} dias`}
+            data={`De ${converterDataParaString(feriasItem.data_inicial)} à ${converterDataParaString(feriasItem.data_final)}`}
+          />
+          {feriasItem.quantidade !==          
+          "30"  && (
+            <CardEscala
+              nome={`${dadosUsuarios?.nome}  ${feriasItem.quantidade} dias`}
+              data={`De ${converterDataParaString(feriasItem.data_inicial2)} à ${converterDataParaString(feriasItem.data_final2)}`}
+            />
+          )}
+        </React.Fragment>
+      ))}
     </ScrollView>
-);
+  );
+  
 }

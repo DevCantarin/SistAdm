@@ -67,11 +67,11 @@ export default function Tabs() {
       //   component: Supervisor,
       //   icon: 'calendar'
       // },
-      {
-        name: 'Explorar',
-        component: Explorar,
-        icon: 'search'
-      },
+      // {
+      //   name: 'Explorar',
+      //   component: Explorar,
+      //   icon: 'search'
+      // },
       {
         name: 'Perfil',
         component: Perfil,
@@ -97,11 +97,11 @@ export default function Tabs() {
           component: Administrador,
           icon: 'calendar'
         },
-        {
-          name: 'Explorar',
-          component: Explorar,
-          icon: 'search'
-        },
+        // {
+        //   name: 'Explorar',
+        //   component: Explorar,
+        //   icon: 'search'
+        // },
         {
           name: 'Perfil',
           component: Perfil,

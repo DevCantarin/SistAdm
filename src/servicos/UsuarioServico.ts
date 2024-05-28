@@ -130,3 +130,24 @@ export async function pegarFolgasUsuario(re: string) {
   }
 }
 
+export async function pegarFeriasUsuario(re: string) {
+  const token = await AsyncStorage.getItem('token');
+
+  if (!token) {
+    console.log('Token não encontrado no armazenamento local.');
+    return null;
+  }
+
+  try {
+    const resultado = await api.get(`/ferias/re/${re}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return resultado.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}

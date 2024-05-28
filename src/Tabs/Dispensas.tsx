@@ -148,7 +148,7 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
       </Box>
 
       {lista.length === 0 ? (
-        <Box alignSelf="center" padding={5}>
+        <Box alignSelf="center" padding={5}>              
           <Titulo color="red.500">AGUARDE O CARREGAMENTO</Titulo>
         </Box>
         
