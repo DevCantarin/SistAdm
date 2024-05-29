@@ -53,8 +53,6 @@ export default function Produtividade({ navigation }: NavigationProps<'Principal
         console.log(`o resultado é ${resultado}`)
         if (resultado) {
           setVisitasAgendadas(resultado);
-          console.log(`Visitas Agendadas é ${JSON.stringify(visitasAgendadas)}`)
-          console.log(``)
         }
       }
       visitaComunitaria();

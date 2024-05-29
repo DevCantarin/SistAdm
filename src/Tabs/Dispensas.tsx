@@ -33,6 +33,7 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
   const [lista, setLista] = useState<Folga[]>([]);
   const [dataInicial, setdDataInicial] = useState(new Date())
   const [dataFinal, setdDataFinal] = useState(new Date())
+  const [folgaUsuario, setFolgaUsuario] = useState([] as Folga[])
 
 
   useFocusEffect(
@@ -130,44 +131,99 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
     }
   }, [mike, folgasFiltradas]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      async function folgaData() {
+        const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
+        if (resultado) {
+          console.log(`folgas agendadas desse usuario são ${JSON.stringify(resultado)}`)
+          setFolgaUsuario(resultado);
+        }
+      }
+      folgaData();
+    }, [dadosUsuarios.re, dadosUsuarios.dig])
+  );
+
   return (
     <ScrollView>
-      <Botao>EFETIVO SOB SEU COMANDO</Botao>
-      <Titulo color="blue.500" alignSelf="center" paddingBottom={1}>{dadosUsuarios.funcao}</Titulo>
-      <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>FOLGAS DO SEU PELOTÃO</Titulo>
-      <Box>          
-        <EntradaTexto
-          label="Pesquisa por RE"
-          placeholder="Digite o RE do Mike"
-          value={mike}
-          onChangeText={(itemValue)=>setMike(itemValue)}
-        />
-      </Box>
-      <Box>          
+      {/* <Botao>EFETIVO SOB SEU COMANDO</Botao> */}
+      {(dadosUsuarios.funcao === "ADMINISTRADOR" || 
+        dadosUsuarios.funcao === "CGP-1" || 
+        dadosUsuarios.funcao === "CGP-2" || 
+        dadosUsuarios.funcao === "CGP-3" || 
+        dadosUsuarios.funcao === "CGP-4") ? (
+          <>
+            <Titulo color="blue.500" alignSelf="center" paddingBottom={1}>
+            {`Olá ${dadosUsuarios.nome}`}
+            </Titulo>
+            <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>
+              FOLGAS DOS SEUS SUBORDINADOS
+            </Titulo>
+            <Box padding={5} margin={5}>          
+              <EntradaTexto
+                label="Pesquisa por RE"
+                placeholder="Digite o RE do Mike"
+                value={mike}
+                onChangeText={(itemValue) => setMike(itemValue)}
+              />
+            </Box>
+            <Box>
+              {/* Outros conteúdos do segundo Box podem ir aqui */}
+            </Box>
       
-      </Box>
-
-      {lista.length === 0 ? (
-        <Box alignSelf="center" padding={5}>              
-          <Titulo color="red.500">AGUARDE O CARREGAMENTO</Titulo>
-        </Box>
-        
-      ) : (
-        lista.map((folga, index) => (
-          <Box key={index}>
-            <CardEscala
-              key={folga.id}
-              nome={` ${folga.grad} ${folga.re} ${folga.nome}  ${folga.motivo}`}
-              data={converterDataParaString(folga.data_inicial)}
-              status={`${folga.aprovacao === "SIM" ? "FOLGA APROVADA" : folga.aprovacao === "NÃO" ? "FOLGA REPROVADA" : ""}`}
-              foiAtendido={folga.aprovacao === "SIM"}
-              foiNegado={folga.aprovacao === "NÃO"}
-              foiPedido={folga.aprovacao == null}
-              folga={folga}
-            />
-          </Box>
-        ))
-      )}
+            {lista.length === 0 ? (
+              <Box alignSelf="center" padding={5}>              
+                <Titulo color="red.500">AGUARDE O CARREGAMENTO</Titulo>
+              </Box>
+            ) : (
+              lista.map((folga, index) => (
+                <Box key={index}>
+                  <CardEscala
+                    key={folga.id}
+                    nome={` ${folga.grad} ${folga.re} ${folga.nome}  ${folga.motivo}`}
+                    data={converterDataParaString(folga.data_inicial)}
+                    status={`${folga.aprovacao === "SIM" ? "FOLGA APROVADA" : folga.aprovacao === "NÃO" ? "FOLGA REPROVADA" : ""}`}
+                    foiAtendido={folga.aprovacao === "SIM"}
+                    foiNegado={folga.aprovacao === "NÃO"}
+                    foiPedido={folga.aprovacao == null}
+                    folga={folga}
+                  />
+                </Box>
+              ))
+            )}
+          </>
+        ) : (
+          <>
+            <Titulo color="blue.500" alignSelf="center" paddingBottom={1}>
+              {`Olá ${dadosUsuarios.nome}`}
+            </Titulo>
+            <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>
+              SUAS FOLGAS
+            </Titulo>      
+            {folgaUsuario.length === 0 ? (
+              <Box alignSelf="center" padding={5}>              
+                <Titulo color="red.500">AGUARDE O CARREGAMENTO</Titulo>
+              </Box>
+            ) : (
+              folgaUsuario.map((folga, index) => (
+                <Box key={index}>
+                  <CardEscala
+                    key={folga.id}
+                    nome={` ${folga.grad} ${folga.re} ${folga.nome}  ${folga.motivo}`}
+                    data={converterDataParaString(folga.data_inicial)}
+                    status={`${folga.aprovacao === "SIM" ? "FOLGA APROVADA" : folga.aprovacao === "NÃO" ? "FOLGA REPROVADA" : ""}`}
+                    foiAtendido={folga.aprovacao === "SIM"}
+                    foiNegado={folga.aprovacao === "NÃO"}
+                    foiPedido={folga.aprovacao == null}
+                    folga={folga}
+                  />
+                </Box>
+              ))
+            )}
+          </>
+        )}
     </ScrollView>
   );
+  
+  
 }
