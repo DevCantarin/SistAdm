@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "864336151793",
+    "project_id": "sistadm-5e389",
+    "storage_bucket": "sistadm-5e389.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864336151793:android:6e51dd828053b0e19a1550",
+        "android_client_info": {
+          "package_name": "SistAdm.DevCantarin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB90tlg8GeAH6H4SF_ostV15DqbrUCAPpg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
