@@ -9,12 +9,10 @@ import { Image, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 
 import { Titulo } from '../componentes/Titulo';
-import { pegarDadosUsuarios, pegarFolgasUsuario } from '../servicos/UsuarioServico';
+import { pegarDadosUsuarios } from '../servicos/UsuarioServico';
 import { Usuario } from '../interfaces/Usuario';
 import { Escala } from '../interfaces/Escala';
 import { Folga } from '../interfaces/Folga';
-import { pegarEscalasUsuario } from '../servicos/escalaServico';
-import { cancelarFolgas } from '../servicos/FolgasServico';
 import { icone } from '../componentes/icone';
 
 const estilos = StyleSheet.create({
@@ -98,46 +96,8 @@ export default function Principal({ navigation }: NavigationProps<'Principal'>) 
     }
     fetchData();
   }, [isFocused, forceUpdate]);
+;
 
-  useFocusEffect(
-    React.useCallback(() => {
-      async function folgaData() {
-        const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
-        if (resultado) {
-          setFolgasAgendadas(resultado);
-        }
-      }
-      folgaData();
-    }, [dadosUsuarios.re, dadosUsuarios.dig, forceUpdate])
-  );
-
-  useFocusEffect(
-    React.useCallback(() => {
-      async function escalaData() {
-        const resultado = await pegarEscalasUsuario(`${dadosUsuarios.re}`);
-        if (resultado) {
-          setDadosEscalas(resultado);
-        }
-      }
-      escalaData();
-    }, [dadosUsuarios.re, dadosUsuarios.dig, forceUpdate])
-  );
-
-  const handleCancelarFolga = async (folga: Folga) => {
-    try {
-      const resultado = await cancelarFolgas(folga.id);
-
-      if (resultado) {
-        console.log('Folga cancelada com sucesso');
-        setFolgasAgendadas((prevFolgas) => prevFolgas.filter((f) => f.id !== folga.id));
-        setForceUpdate((prev) => prev + 1); // Incrementa 'forceUpdate' para forçar a atualização
-      } else {
-        console.log('Erro ao cancelar folga!!!');
-      }
-    } catch (error) {
-      console.error('Erro ao cancelar folga:', error);
-    }
-  };
 
   return (
     <ScrollView p="5" contentContainerStyle={estilos.principal}>

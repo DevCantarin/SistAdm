@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Divider, ScrollView, useToast } from 'native-base';
-import { Botao } from '../componentes/Botao';
 import { CardEscala } from '../componentes/CardEscala';
 import { Titulo } from '../componentes/Titulo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { pegarDadosUsuarios, pegarFolgasUsuario } from '../servicos/UsuarioServico';
+import { pegarDadosUsuarios} from '../servicos/UsuarioServico';
 import { NavigationProps } from '../@types/navigation';
 import { useIsFocused } from '@react-navigation/native';
 import { converterDataParaString } from '../utils/conversoes';
@@ -14,14 +13,15 @@ import { Folga } from '../interfaces/Folga';
 import { useFocusEffect } from '@react-navigation/native';
 import { pegarEscalasUsuario } from '../servicos/escalaServico';
 import { format } from 'date-fns';
-import { cancelarFolgas } from '../servicos/FolgasServico';
+import { cancelarFolgas, pegarFolgasUsuario } from '../servicos/FolgasServico';
+import { es } from 'date-fns/locale';
 
 export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
   const [mikeId, setMikeId] = useState('');
   const [folgasAgendadas, setFolgasAgendadas] = useState<Folga[]>([]);
   const [dadosUsuarios, setDadosUsuarios] = useState({} as Usuario);
-  const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([]);
-  const [forceUpdate, setForceUpdate] = useState(0); 
+  const [dadosEscalas, setDadosEscalas] = useState<Escala[]>([]); 
+  const [forceUpdate, setForceUpdate] = useState(0);
   const toast = useToast();
   const isFocused = useIsFocused();
 
@@ -40,14 +40,19 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
       }
     }
     fetchData();
-  }, [isFocused, forceUpdate]); 
+  }, [isFocused, forceUpdate]);
 
   useFocusEffect(
     React.useCallback(() => {
       async function folgaData() {
+        // Verifica se dadosUsuarios.re e dadosUsuarios.dig estão definidos
+        if (!dadosUsuarios.re || !dadosUsuarios.dig) {
+          return;
+        }
+
         const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
         if (resultado) {
-          console.log(`folgas agendadas é ${JSON.stringify(resultado)}`)
+          // console.log(`folgas agendadas são ${JSON.stringify(resultado)}`);
           setFolgasAgendadas(resultado);
         }
       }
@@ -58,10 +63,19 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
   useFocusEffect(
     React.useCallback(() => {
       async function escalaData() {
-        const resultado = await pegarEscalasUsuario(`${dadosUsuarios.re}`);
-        if (resultado) {
-          setDadosEscalas(resultado);
+        // Verifica se dadosUsuarios.re e dadosUsuarios.dig estão definidos
+        if (!dadosUsuarios.re || !dadosUsuarios.dig) {
+          return;
         }
+
+        const resultado = await pegarEscalasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
+        if (!resultado) {
+          console.log('Nenhum resultado retornado de pegarEscalasUsuario');
+          return;
+        }
+
+        // console.log(`Dados das escalas: ${JSON.stringify(resultado)}`);
+        setDadosEscalas(resultado);
       }
       escalaData();
     }, [dadosUsuarios.re, dadosUsuarios.dig, forceUpdate])
@@ -69,20 +83,16 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
 
   const handleCancelarFolga = async (folga: Folga) => {
     try {
-      const resultado = await cancelarFolgas(folga.id);
-  
+      const resultado = await cancelarFolgas(folga.ID);
+
       if (resultado) {
         console.log('Folga cancelada com sucesso');
-  
-        // Log antes da atualização
-        console.log('folgasAgendadas antes da atualização:', folgasAgendadas);
-  
-        setFolgasAgendadas((prevFolgas) => prevFolgas.filter((f) => f.id !== folga.id));
-  
-        // Log depois da atualização
-        console.log('folgasAgendadas após da atualização:', folgasAgendadas);
-  
-        setForceUpdate((prev) => prev + 1); // Incrementa 'forceUpdate' para forçar a atualização
+
+        // Atualiza as folgas agendadas removendo a folga cancelada
+        setFolgasAgendadas((prevFolgas) => prevFolgas.filter((f) => f.ID !== folga.ID));
+
+        // Incrementa 'forceUpdate' para forçar a atualização da lista de folgas
+        setForceUpdate((prev) => prev + 1);
       } else {
         console.log('Erro ao cancelar folga!!!');
       }
@@ -90,32 +100,59 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
       console.error('Erro ao cancelar folga:', error);
     }
   };
-   
 
   return (
     <ScrollView p="5">
       <Titulo color="blue.500">Minhas Escalas</Titulo>
-      {/* <Botao mt={5} mb={5} onPress={() => navigation.navigate('Agendamento')}>
-        Agendar nova Folga
-      </Botao> */}
 
       <Titulo color="blue.500" fontSize="lg" alignSelf="flex-start" mb={2}>
         Previsão de Próximas Escalas
-      </Titulo>
+      </Titulo> 
+
+      {
+      dadosEscalas.length > 0 &&
+        dadosEscalas.map((escala) => (
+          <CardEscala
+            key={escala.Id} 
+            nome={`${escala.Funcao}`}
+            data={escala.Data?`${format(new Date(escala.Data), 'dd/MM/yyyy')} ${escala.Inicio} - ${escala.Termino}`:""}
+          />
+          
+        ))       
+        }
+
+       {dadosEscalas.length > 0 &&
+        dadosEscalas.map((escala) => (
+          <CardEscala
+            key={escala.Id2} 
+            nome={`${escala.Funcao2}`}
+            data={escala.Data?`${format(new Date(escala.Data2), 'dd/MM/yyyy')} ${escala.Inicio2} - ${escala.Termino2}`:""}
+          />
+          
+        ))       
+        }
 
       {dadosEscalas.length > 0 &&
-        dadosEscalas.map((escala) => {
-          const dataEscala = new Date(escala.data);
+        dadosEscalas.map((escala) => (
+          <CardEscala
+            key={escala.Id3} 
+            nome={`${escala.Funcao3}`}
+            data={escala.Data?`${format(new Date(escala.Data3), 'dd/MM/yyyy')} ${escala.Inicio3} - ${escala.Termino3}`:""}
+          />
+          
+        ))       
+        }
 
-          if (dataEscala > new Date()) {
-            return (
-              <CardEscala key={escala.id} nome={`${escala.nome} ${escala.funcao}`} 
-               data={`${format(dataEscala, 'dd/MM/yyyy')}   ${escala.inicio} - ${escala.termino}`} />
-            );
-          }
-
-          return null;
-        })}
+{dadosEscalas.length > 0 &&
+        dadosEscalas.map((escala) => (
+          <CardEscala
+            key={escala.Id4} 
+            nome={`${escala.Funcao4}`}
+            data={escala.Data?`${format(new Date(escala.Data4), 'dd/MM/yyyy')} ${escala.Inicio4} - ${escala.Termino4}`:""}
+          />
+          
+        ))       
+        } 
 
       <Divider mt={5} />
 
@@ -124,18 +161,24 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
       </Titulo>
       {folgasAgendadas.length > 0 &&
         folgasAgendadas.map((folga) => {
-          const dataFolga = new Date(folga.data_inicial);
+          const dataFolga = new Date(folga.DATA);
 
-          if (dataFolga.setDate(dataFolga.getDate())  >= new Date().setDate(new Date().getDate())) {
+          if (dataFolga >= new Date()) {
             return (
               <CardEscala
-                key={folga.id}
-                nome={`${dadosUsuarios?.nome}  ${folga.motivo}`}
-                data={converterDataParaString(folga.data_inicial)}
-                status= {`${folga.aprovacao=="SIM"? "FOLGA APROVADA": folga.aprovacao == "NÃO"? "FOLGA REPROVADA": ""}`}
-                foiAtendido = {folga.aprovacao=="SIM"? true : false}
-                foiNegado = {folga.aprovacao=="NÃO"? true : false}
-                foiPedido={folga.aprovacao == null || folga.aprovacao == "" ? true : false} 
+                key={folga.ID}
+                nome={`${dadosUsuarios?.nome}  ${folga.MOTIVO  }`}
+                data={converterDataParaString(folga.DATA)}
+                status={
+                  folga.APROVACAO === 'SIM'
+                    ? 'FOLGA APROVADA'
+                    : folga.APROVACAO === 'NÃO'
+                    ? 'FOLGA REPROVADA'
+                    : ''
+                }
+                foiAtendido={folga.APROVACAO === 'SIM'}
+                foiNegado={folga.APROVACAO === 'NÃO'}
+                foiPedido={!folga.APROVACAO}
                 onPress={() => handleCancelarFolga(folga)}
                 folga={folga}
               />
@@ -145,5 +188,5 @@ export default function ESCALA({ navigation }: NavigationProps<'Principal'>) {
           return null;
         })}
     </ScrollView>
-);
+  );
 }

@@ -1,14 +1,11 @@
 export interface Folga {
-    id: string;
-    data_inicial: string;
-    grad: string;
-    re: string;
-    nome: string;
-    motivo: string;
-    quantidade: string;
-    createdAt: Date;
-    updatedAt: Date;
-    aprovacao: string;
-    email: string;
-  }
-  
+  ID: any;
+  GRAD: any;
+  RE: any;
+  NOME: any;
+  DATA: any;
+  MOTIVO: any;
+  JUSTIFICATIVA: any;
+  QUANTIDADE: any;
+  APROVACAO: any;
+}

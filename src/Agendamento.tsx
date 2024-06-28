@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, Box, Button, useToast, Text, Select } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Botao } from './componentes/Botao';
-import { agendarFolgas } from './servicos/FolgasServico';
+import { agendarFolgas, pegarFolgasUsuario } from './servicos/FolgasServico';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Titulo } from './componentes/Titulo';
 import { EntradaTexto } from './componentes/EntradaTexto';
-import { pegarDadosUsuarios, pegarFolgasUsuario } from './servicos/UsuarioServico';
+import { pegarDadosUsuarios } from './servicos/UsuarioServico';
 import { useFocusEffect } from '@react-navigation/native';
 import { Usuario } from './interfaces/Usuario';
 import { Folga } from './interfaces/Folga';
@@ -70,7 +70,7 @@ export default function Agendamento({ route, navigation }: any) {
       setDate(localDate);
       
       const folgasDoMes = folgasAgendadas.filter((folga) => {
-        const dataFolga = new Date(folga.data_inicial);
+        const dataFolga = new Date(folga.DATA);
         console.log(dataFolga)
         console.log(`dataFolga.getMonth() é ${dataFolga.getMonth()}`)
         console.log(`date.getMonth() é ${date.getMonth()}`)
@@ -110,7 +110,7 @@ export default function Agendamento({ route, navigation }: any) {
       return;
     }
 
-    const folgasMensaisNoMes = folgasAgendadasDoMes.filter((folga) => folga.motivo === 'FOLGA MENSAL' && new Date(folga.data_inicial).getMonth() === date.getMonth());
+    const folgasMensaisNoMes = folgasAgendadasDoMes.filter((folga) => folga.MOTIVO === 'FOLGA MENSAL' && new Date(folga.DATA).getMonth() === date.getMonth());
     console.log(`o valor de date é ${date}`)
     console.log(`o valor de date.getMonth é ${date.getMonth()}`)
 

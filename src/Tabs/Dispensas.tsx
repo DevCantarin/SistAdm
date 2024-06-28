@@ -35,13 +35,14 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
   const [dataFinal, setdDataFinal] = useState(new Date())
   const [folgaUsuario, setFolgaUsuario] = useState([] as Folga[])
 
-
   useFocusEffect(
     React.useCallback(() => {
       async function folgaData() {
         try {
           const resultado = await pegarTodasAsFolgas();
-          setFolga(resultado);
+          const folgasAtuais = resultado.filter((folga: Folga) => new Date(folga.DATA) >= new Date());
+          // console.log(folgasAtuais)
+          setFolga(folgasAtuais);
         } catch (error) {
           console.error("Erro ao pegar as folgas:", error);
         }
@@ -60,29 +61,7 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
       const resultado = await pegarDadosUsuarios(storedMikeId);
       if (resultado) {
         setDadosUsuarios(resultado);
-
-        if (resultado.funcao === "CGP-1") {
-          setFuncao(efetivo1Pel);
-          const rePelotao = efetivo1Pel.map(mike => `${mike.re}-${mike.dig}`);
-          setListaREs(rePelotao);
-        } else if (resultado.funcao === "CGP-2") {
-          setFuncao(efetivo2Pel);
-          const rePelotao = efetivo2Pel.map(mike => `${mike.re}-${mike.dig}`);
-          setListaREs(rePelotao);
-        } else if (resultado.funcao === "CGP-3") {
-          setFuncao(efetivo3Pel);
-          const rePelotao = efetivo3Pel.map(mike => `${mike.re}-${mike.dig}`);
-          setListaREs(rePelotao);
-        } else if (resultado.funcao === "CGP-4") {
-          setFuncao(efetivo4Pel);
-          const rePelotao = efetivo4Pel.map(mike => `${mike.re}-${mike.dig}`);
-          setListaREs(rePelotao);
-        }
-        else if (resultado.funcao === "ADMINISTRADOR") {
-          setFuncao(todoEfetivo);
-          const rePelotao = todoEfetivo.map(mike => `${mike.re}-${mike.dig}`);
-          setListaREs(rePelotao);      
-        }
+        updateListaREs(resultado.funcao);
       }
     }
     fetchData();
@@ -109,23 +88,22 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
       const efetivoFiltrado4: Efetivo[] = resultado.filter((mike: Efetivo) => mike.equipe === "4º PEL");
       setEfetivo4Pel(efetivoFiltrado4);
 
-      const todoEfetivo: Efetivo[] = resultado.filter((mike: Efetivo) => mike.equipe  !="");
+      const todoEfetivo: Efetivo[] = resultado.filter((mike: Efetivo) => mike.equipe !== "");
       setTodoEfetivo(todoEfetivo);
     }
     fetchData();
   }, []); 
 
   useEffect(() => {
-    // Filtra as folgas cujos REs estejam na lista fornecida
-    const folgasFiltradas = folga.filter(f => listaREs.includes(f.re));
-    setFolgasFiltradas(folgasFiltradas);
+    if (listaREs.length > 0) {
+      const folgasFiltradas = folga.filter(f => listaREs.includes(f.RE));
+      setFolgasFiltradas(folgasFiltradas);
+    }
   }, [folga, listaREs]);
 
-
-    useEffect(() => {
-    // Atualiza o estado lista sempre que mike ou folgas mudarem
+  useEffect(() => {
     if (mike) {
-      setLista(folgasFiltradas.filter(folga => folga.re.includes(mike)));
+      setLista(folgasFiltradas.filter(folga => folga.RE.includes(mike)));
     } else {
       setLista(folgasFiltradas);
     }
@@ -136,13 +114,31 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
       async function folgaData() {
         const resultado = await pegarFolgasUsuario(`${dadosUsuarios.re}-${dadosUsuarios.dig}`);
         if (resultado) {
-          console.log(`folgas agendadas desse usuario são ${JSON.stringify(resultado)}`)
           setFolgaUsuario(resultado);
         }
       }
       folgaData();
     }, [dadosUsuarios.re, dadosUsuarios.dig])
   );
+
+  const updateListaREs = (funcao: string) => {
+    let efetivoAtual: Efetivo[] = [];
+    if (funcao === "CGP-1") {
+      efetivoAtual = efetivo1Pel;
+    } else if (funcao === "CGP-2") {
+      efetivoAtual = efetivo2Pel;
+    } else if (funcao === "CGP-3") {
+      efetivoAtual = efetivo3Pel;
+    } else if (funcao === "CGP-4") {
+      efetivoAtual = efetivo4Pel;
+    } else if (funcao === "ADMINISTRADOR") {
+      efetivoAtual = todoEfetivo;
+    }
+
+    const rePelotao = efetivoAtual.map(mike => `${mike.re}-${mike.dig}`);
+    console.log(`os REs do efetivo eh ${rePelotao}`)
+    setListaREs(rePelotao);
+  };
 
   return (
     <ScrollView>
@@ -153,12 +149,14 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
         dadosUsuarios.funcao === "CGP-3" || 
         dadosUsuarios.funcao === "CGP-4") ? (
           <>
+            
             <Titulo color="blue.500" alignSelf="center" paddingBottom={1}>
             {`Olá ${dadosUsuarios.nome}`}
             </Titulo>
             <Titulo color="blue.500" alignSelf="center" paddingBottom={5}>
               FOLGAS DOS SEUS SUBORDINADOS
             </Titulo>
+            <Botao onPress={() => navigation.navigate("Agendamento")}>AGENDAR DISPENSAS</Botao>
             <Box padding={5} margin={5}>          
               <EntradaTexto
                 label="Pesquisa por RE"
@@ -179,13 +177,13 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
               lista.map((folga, index) => (
                 <Box key={index}>
                   <CardEscala
-                    key={folga.id}
-                    nome={` ${folga.grad} ${folga.re} ${folga.nome}  ${folga.motivo}`}
-                    data={converterDataParaString(folga.data_inicial)}
-                    status={`${folga.aprovacao === "SIM" ? "FOLGA APROVADA" : folga.aprovacao === "NÃO" ? "FOLGA REPROVADA" : ""}`}
-                    foiAtendido={folga.aprovacao === "SIM"}
-                    foiNegado={folga.aprovacao === "NÃO"}
-                    foiPedido={folga.aprovacao == null}
+                    key={folga.ID}
+                    nome={` ${folga.GRAD} ${folga.RE} ${folga.NOME}  ${folga.MOTIVO}`}
+                    data={converterDataParaString(folga.DATA)}
+                    status={`${folga.APROVACAO === "SIM" ? "FOLGA APROVADA" : folga.APROVACAO === "NÃO" ? "FOLGA REPROVADA" : ""}`}
+                    foiAtendido={folga.APROVACAO === "SIM"}
+                    foiNegado={folga.APROVACAO === "NÃO"}
+                    foiPedido={folga.APROVACAO == null}
                     folga={folga}
                   />
                 </Box>
@@ -208,13 +206,13 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
               folgaUsuario.map((folga, index) => (
                 <Box key={index}>
                   <CardEscala
-                    key={folga.id}
-                    nome={` ${folga.grad} ${folga.re} ${folga.nome}  ${folga.motivo}`}
-                    data={converterDataParaString(folga.data_inicial)}
-                    status={`${folga.aprovacao === "SIM" ? "FOLGA APROVADA" : folga.aprovacao === "NÃO" ? "FOLGA REPROVADA" : ""}`}
-                    foiAtendido={folga.aprovacao === "SIM"}
-                    foiNegado={folga.aprovacao === "NÃO"}
-                    foiPedido={folga.aprovacao == null}
+                    key={folga.ID}
+                    nome={` ${folga.GRAD} ${folga.RE} ${folga.NOME}  ${folga.MOTIVO}`}
+                    data={converterDataParaString(folga.DATA)}
+                    status={`${folga.APROVACAO === "SIM" ? "FOLGA APROVADA" : folga.APROVACAO === "NÃO" ? "FOLGA REPROVADA" : ""}`}
+                    foiAtendido={folga.APROVACAO === "SIM"}
+                    foiNegado={folga.APROVACAO === "NÃO"}
+                    foiPedido={folga.APROVACAO == null}
                     folga={folga}
                   />
                 </Box>
@@ -224,6 +222,4 @@ export default function DISPENSAS({ navigation }: NavigationProps<'Explorar'>){
         )}
     </ScrollView>
   );
-  
-  
 }
